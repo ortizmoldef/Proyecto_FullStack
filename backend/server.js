@@ -13,6 +13,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'] 
 }));
 
+// LLamando al archivo .ENV, es la dirección de la BD
 const mongoURI = process.env.MONGO_URI;
 
 // Conectar a MongoDB
