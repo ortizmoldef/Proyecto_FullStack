@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// Crea un Usuario
+// Crea un el esquema de un Usuario
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
