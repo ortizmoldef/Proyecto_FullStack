@@ -13,7 +13,7 @@ exports.authJWT = (req, res, next) => {
         next()
     } else {
         console.log(error)
-        return res.status(403).json({mensaje: "Ande ibaaaa"})
+        return res.status(403).json({mensaje: "No puedes Entrar"})
     }
     ;
 }
