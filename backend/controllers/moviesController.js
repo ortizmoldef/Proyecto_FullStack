@@ -70,8 +70,20 @@ const createMovie = async (req, res) => {
         }
     };
 
+    //Obtener las peliculas
+    const getAllMovies = async (req, res) => {
+        try {
+            const movies = await Movie.find();  // Encuentra todas las películas en la base de datos
+            res.status(200).json(movies);  // Devuelve las películas en formato JSON
+        } catch (error) {
+            console.error('❌ Error al obtener las películas:', error);
+            res.status(500).json({ error: 'Error al obtener las películas' });
+        }
+    };
+
 module.exports = {
     createMovie,
     updateMovie,
-    deleteMovie
+    deleteMovie,
+    getAllMovies
 };

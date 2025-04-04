@@ -1,11 +1,13 @@
 {
   "type": "commonjs",
   "scripts": {
-    "dev": "nodemon server.js"
+    "start:dev": "cross-env NODE_ENV=Development node server.js",
+    "start:prod": "cross-env NODE_ENV=Production node server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
