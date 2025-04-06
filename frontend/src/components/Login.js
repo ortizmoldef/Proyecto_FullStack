@@ -1,31 +1,32 @@
-// Login.js
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const Login = ({ setIsLoggedIn }) => {
-  const [username, setUsername] = useState('');
+const Login = ({ setIsLoggedIn, setRole }) => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/login', { username, password });
+      const response = await axios.post('http://localhost:5000/api/login', {
+        email,
+        password
+      });
 
       if (response.data && response.data.token && response.data.user) {
-        // Guardar el token y el usuario en localStorage
+        // Guardar el token y los datos del usuario en el localStorage
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        localStorage.setItem('role', response.data.user.role);  // Guardamos el rol (admin o user)
+        localStorage.setItem('role', response.data.user.role);
 
-        // Actualizar el estado de autenticación en App.js
+        // Actualizar el estado local
         setIsLoggedIn(true);
+        setRole(response.data.user.role);  // Actualizar el rol también
 
         console.log('Inicio de sesión exitoso:', response.data);
-
-        // Redirigir al usuario al inicio
-        navigate('/');
+        navigate('/');  // Redirigir a la página principal
       } else {
         console.error('Respuesta del servidor no contiene los datos esperados');
         alert('Error al iniciar sesión');
@@ -41,10 +42,10 @@ const Login = ({ setIsLoggedIn }) => {
       <h2>Iniciar Sesión</h2>
       <form onSubmit={handleSubmit}>
         <input
-          type="text"
-          placeholder="Usuario"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          type="email"
+          placeholder="Correo electrónico"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"

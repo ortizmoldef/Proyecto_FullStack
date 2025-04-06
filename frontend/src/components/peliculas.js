@@ -1,142 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from 'axios';  // Importamos axios
+import InsertarPelicula from './insertarPelicula'; // Importar el componente de insertar/editar película
 
 const Peliculas = () => {
-    const [movies, setMovies] = useState([]);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [genre, setGenre] = useState('');
-    const [year, setYear] = useState('');
-    const [selectedMovie, setSelectedMovie] = useState(null);
-    const [error, setError] = useState('');
-    const [message, setMessage] = useState('');
+  const [movies, setMovies] = useState([]); // Lista de películas
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [selectedMovie, setSelectedMovie] = useState(null); // Estado para manejar la película seleccionada para editar
 
-    // Obtener todas las películas al cargar el componente
-    useEffect(() => {
-        fetchMovies();
-    }, []);
+  // Obtener el token y el rol almacenado en localStorage (o cualquier otro almacenamiento que estés usando)
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role'); // Asegúrate de que guardas el rol del usuario en el localStorage también
 
-    // Función para obtener las películas
+  // Realizar la solicitud para obtener las películas desde la base de datos
+  useEffect(() => {
     const fetchMovies = async () => {
-        try {
-            const response = await axios.get('http://localhost:5000/api/obtener_peliculas');
-            setMovies(response.data);
-        } catch (err) {
-            console.error('Error al obtener las películas', err);
-        }
+      try {
+        const response = await axios.get('http://localhost:5000/api/obtener_peliculas', {
+          headers: {
+            Authorization: `Bearer ${token}`,  // Incluir el token en los headers
+          },
+        });
+        setMovies(response.data);  // Asignamos las películas obtenidas al estado `movies`
+      } catch (err) {
+        console.error('Error al obtener las películas:', err);
+        setError('No se pudieron obtener las películas.');
+      }
     };
 
-    // Función para crear o actualizar una película
-const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!title || !description || !genre || !year) {
-        setError('Todos los campos son obligatorios');
-        return;
+    if (token) {
+      fetchMovies();  // Llamamos a la función para obtener las películas solo si hay un token disponible
+    } else {
+      setError('No hay token de autenticación.');
     }
+  }, [token]);  // Este efecto se ejecuta cuando el token cambia o cuando el componente se monta
 
-    const movieData = { title, description, genre, year };
+  // Función para manejar la selección de la película para editar
+  const handleEditMovie = (movie) => {
+    setSelectedMovie(movie); // Setea la película seleccionada para editar
+  };
 
-    try {
-        if (selectedMovie) {
-            // Si estamos actualizando, enviamos un PUT
-            await axios.put(`http://localhost:5000/api/modificar_pelicula/${selectedMovie._id}`, movieData);
-            setMessage('Película actualizada con éxito');
-        } else {
-            // Si estamos creando una película, enviamos un POST
-            await axios.post('http://localhost:5000/api/crear_peliculas', movieData);
-            setMessage('Película creada con éxito');
-        }
-        // Limpiar el formulario y volver a cargar las películas
-        setTitle('');
-        setDescription('');
-        setGenre('');
-        setYear('');
-        setSelectedMovie(null);
-        fetchMovies();
-        setError('');
-    } catch (err) {
-        console.error('Error al crear o actualizar la película', err);
-        setError('Hubo un error al procesar la película');
-    }
-};
+  return (
+    <div>
+      {message && <div style={{ color: 'green' }}>{message}</div>}
+      {error && <div style={{ color: 'red' }}>{error}</div>}
 
-    // Función para eliminar una película
-    const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:5000/api/eliminar_pelicula/${id}`);
-            setMessage('Película eliminada con éxito');
-            fetchMovies();
-        } catch (err) {
-            console.error('Error al eliminar la película', err);
-            setError('Hubo un error al eliminar la película');
-        }
-    };
+      <h3>Lista de Películas</h3>
+      <ul>
+        {movies.map((movie) => (
+          <li key={movie._id}>
+            <p><strong>{movie.title}</strong></p>
+            <p>{movie.description}</p>
+            <p>{movie.genre} - {movie.year}</p>
+            {/* Solo muestra el botón de editar si el usuario es admin */}
+            {role === 'admin' && (
+              <button onClick={() => handleEditMovie(movie)}>Editar</button>
+            )}
+          </li>
+        ))}
+      </ul>
 
-    // Función para seleccionar una película y cargarla en el formulario de edición
-    const handleEdit = (movie) => {
-        setSelectedMovie(movie);
-        setTitle(movie.title);
-        setDescription(movie.description);
-        setGenre(movie.genre);
-        setYear(movie.year);
-    };
-
-    return (
-        <div>
-            <h2>{selectedMovie ? 'Editar' : 'Crear'} Película</h2>
-            {message && <div style={{ color: 'green' }}>{message}</div>}
-            {error && <div style={{ color: 'red' }}>{error}</div>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Título:</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Descripción:</label>
-                    <input
-                        type="text"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Género:</label>
-                    <input
-                        type="text"
-                        value={genre}
-                        onChange={(e) => setGenre(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Año:</label>
-                    <input
-                        type="number"
-                        value={year}
-                        onChange={(e) => setYear(e.target.value)}
-                    />
-                </div>
-                <button type="submit">{selectedMovie ? 'Actualizar' : 'Crear'} Película</button>
-            </form>
-
-            <h3>Lista de Películas</h3>
-            <ul>
-                {movies.map((movie) => (
-                    <li key={movie._id}>
-                        <p><strong>{movie.title}</strong></p>
-                        <p>{movie.description}</p>
-                        <p>{movie.genre} - {movie.year}</p>
-                        <button onClick={() => handleEdit(movie)}>Editar</button>
-                        <button onClick={() => handleDelete(movie._id)}>Eliminar</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+      {/* Si hay una película seleccionada, mostramos el formulario de edición */}
+      {selectedMovie && (
+        <InsertarPelicula 
+          selectedMovie={selectedMovie} 
+          setMessage={setMessage}
+          setError={setError}
+          setMovies={setMovies}
+          setSelectedMovie={setSelectedMovie} // Pasamos la función para deselectear la película después de editar
+        />
+      )}
+    </div>
+  );
 };
 
 export default Peliculas;

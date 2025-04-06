@@ -1,8 +1,8 @@
 {
   "type": "commonjs",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=Development node server.js",
-    "start:prod": "cross-env NODE_ENV=Production node server.js"
+    "start:dev": "cross-env NODE_ENV=Development nodemon server.js",
+    "start:prod": "cross-env NODE_ENV=Production nodemon  server.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
