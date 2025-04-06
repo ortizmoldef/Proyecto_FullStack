@@ -10,6 +10,12 @@ const createMovie = async (req, res) => {
             return res.status(400).json({ error: 'Los campos "title", "description", "genre", y "year" son obligatorios' });
         }
 
+        // Verificar si la película ya existe en la base de datos
+        const existingMovie = await Movie.findOne({ title: title });
+        if (existingMovie) {
+            return res.status(409).json({ message: 'La película ya ha sido creada con este título.' });
+        }
+
         // Crear nueva película
         const newMovie = new Movie({ title, description, genre, year, poster, rating });
         await newMovie.save(); // Guardar en la base de datos
@@ -20,7 +26,9 @@ const createMovie = async (req, res) => {
         console.error('❌ Error al agregar película:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
-  };
+};
+
+  
 
   // Modificar las Peliculas
   const updateMovie = async (req, res) => {

@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import InsertarPelicula from './insertarPelicula';
 
-const Header = ({ setMessage, setError, setMovies, isLoggedIn, setIsLoggedIn, setRole }) => {
-  const location = useLocation();
+const Header = ({isLoggedIn, setIsLoggedIn, setRole }) => {
   const [role, setRoleState] = useState('user');
 
   useEffect(() => {
@@ -46,10 +44,6 @@ const Header = ({ setMessage, setError, setMovies, isLoggedIn, setIsLoggedIn, se
           </li>
         )}
       </ul>
-
-      {location.pathname === '/insertar-pelicula' && (
-        <InsertarPelicula setMessage={setMessage} setError={setError} setMovies={setMovies} />
-      )}
     </nav>
   );
 };

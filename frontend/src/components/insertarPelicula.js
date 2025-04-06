@@ -1,98 +1,95 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const InsertarPelicula = ({ selectedMovie, setMessage, setError, setMovies, setSelectedMovie }) => {
+const InsertarPelicula = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [genre, setGenre] = useState('');
   const [year, setYear] = useState('');
+  const [message, setMessage] = useState(''); // Estado para el mensaje de éxito
+  const [error, setError] = useState(''); // Estado para el mensaje de error
+  const navigate = useNavigate();
 
-  // Si se está editando una película, se llenan los campos con los valores de la película seleccionada
-  useEffect(() => {
-    if (selectedMovie) {
-      setTitle(selectedMovie.title);
-      setDescription(selectedMovie.description);
-      setGenre(selectedMovie.genre);
-      setYear(selectedMovie.year);
-    }
-  }, [selectedMovie]);
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!title || !description || !genre || !year) {
       setError('Por favor, complete todos los campos.');
+      setMessage('');  // Limpiar el mensaje de éxito si hay un error
       return;
     }
 
-    if (selectedMovie) {
-      // Lógica para actualizar la película
-      setMovies((prevMovies) =>
-        prevMovies.map((movie) =>
-          movie._id === selectedMovie._id
-            ? { ...movie, title, description, genre, year } // Actualizamos los datos de la película
-            : movie
-        )
-      );
-      setMessage('Película actualizada con éxito');
-    } else {
-      // Lógica para crear una nueva película
-      const newMovie = {
-        _id: Math.random().toString(), // Generamos un ID único (esto debería ser manejado por el backend)
-        title,
-        description,
-        genre,
-        year,
-      };
-      setMovies((prevMovies) => [...prevMovies, newMovie]);
+    const newMovie = { title, description, genre, year };
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/crear_peliculas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newMovie),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (response.status === 409) {
+          setError(errorData.message);  // Mostrar mensaje de error si ya existe la película
+          setMessage('');
+          return;
+        }
+        throw new Error(errorData.message || 'Error al crear la película');
+      }
+
       setMessage('Película creada con éxito');
+      setError('');  // Limpiar el mensaje de error
+
+      // Limpiar campos
+      setTitle('');
+      setDescription('');
+      setGenre('');
+      setYear('');
+
+      // Redirigir al home
+      navigate('/');
+    } catch (error) {
+      setError(error.message);  // Mostrar error en caso de fallo
+      setMessage('');
     }
-
-    // Limpiar los campos después de guardar
-    setTitle('');
-    setDescription('');
-    setGenre('');
-    setYear('');
-
-    // Deseleccionamos la película después de la edición
-    setSelectedMovie(null);
   };
 
   return (
     <div>
-      <h2>{selectedMovie ? 'Editar' : 'Insertar'} Película</h2>
+      <h2>Insertar Película</h2>
+      {/* Mostrar el mensaje de error si existe */}
+      <div className="error-message" style={{ color: 'red' }}>
+        {error && <div>{error}</div>}
+      </div>
+
+      {/* Mostrar el mensaje de éxito si existe */}
+      <div className="success-message" style={{ color: 'green' }}>
+        {message && <div>{message}</div>}
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div>
           <label>Título:</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
         </div>
         <div>
           <label>Descripción:</label>
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
+          <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
         <div>
           <label>Género:</label>
-          <input
-            type="text"
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-          />
+          <input type="text" value={genre} onChange={(e) => setGenre(e.target.value)} />
         </div>
         <div>
           <label>Año:</label>
-          <input
-            type="number"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-          />
+          <input type="number" value={year} onChange={(e) => setYear(e.target.value)} />
         </div>
-        <button type="submit">{selectedMovie ? 'Actualizar' : 'Crear'} Película</button>
+        <button type="submit">Crear Película</button>
       </form>
     </div>
   );
