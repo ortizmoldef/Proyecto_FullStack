@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAppContext } from '../context/AuthContext';  // Importa el contexto
 
-const Login = ({ setIsLoggedIn, setRole }) => {
+const Login = () => {
+  const { login, setIsLoggedIn, setRole } = useAppContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -16,17 +18,11 @@ const Login = ({ setIsLoggedIn, setRole }) => {
       });
 
       if (response.data && response.data.token && response.data.user) {
-        // Guardar el token y los datos del usuario en el localStorage
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        localStorage.setItem('role', response.data.user.role);
+        // Llamar al método login del contexto
+        login(response.data.token, response.data.user.role);
 
-        // Actualizar el estado local
-        setIsLoggedIn(true);
-        setRole(response.data.user.role);  // Actualizar el rol también
-
-        console.log('Inicio de sesión exitoso:', response.data);
-        navigate('/');  // Redirigir a la página principal
+        // Redirigir al inicio
+        navigate('/');
       } else {
         console.error('Respuesta del servidor no contiene los datos esperados');
         alert('Error al iniciar sesión');

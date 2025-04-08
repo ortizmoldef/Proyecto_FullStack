@@ -6,21 +6,60 @@ const InsertarPelicula = () => {
   const [description, setDescription] = useState('');
   const [genre, setGenre] = useState('');
   const [year, setYear] = useState('');
+  const [rating, setRating] = useState(5);
+  const [imageBase64, setImageBase64] = useState('');
   const [message, setMessage] = useState(''); // Estado para el mensaje de éxito
   const [error, setError] = useState(''); // Estado para el mensaje de error
   const navigate = useNavigate();
 
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const maxSize = 5 * 1024 * 1024; // 5MB
+
+      // Verificar si el archivo supera el tamaño máximo
+      if (file.size > maxSize) {
+        setError('El archivo es demasiado grande. El tamaño máximo permitido es 5MB.');
+        setImageBase64('');  // Limpiar la imagen cargada
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        setImageBase64(reader.result); // Guardamos la imagen como Base64
+        setError('');  // Limpiar cualquier error si la imagen es válida
+      };
+
+      reader.readAsDataURL(file); // Convierte el archivo a Base64
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!title || !description || !genre || !year) {
       setError('Por favor, complete todos los campos.');
       setMessage('');  // Limpiar el mensaje de éxito si hay un error
       return;
     }
-
-    const newMovie = { title, description, genre, year };
-
+  
+    // Verificar si hay un error en la imagen antes de enviar los datos
+    if (error) {
+      setMessage('');
+      return;
+    }
+  
+    const newMovie = { 
+      title, 
+      description, 
+      genre, 
+      year, 
+      rating, 
+      poster: imageBase64 // ✅ Aquí cambiaste 'poster' por 'imageBase64'
+    };
+  
     try {
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5000/api/crear_peliculas', {
@@ -31,7 +70,7 @@ const InsertarPelicula = () => {
         },
         body: JSON.stringify(newMovie),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         if (response.status === 409) {
@@ -41,16 +80,18 @@ const InsertarPelicula = () => {
         }
         throw new Error(errorData.message || 'Error al crear la película');
       }
-
+  
       setMessage('Película creada con éxito');
       setError('');  // Limpiar el mensaje de error
-
+  
       // Limpiar campos
       setTitle('');
       setDescription('');
       setGenre('');
       setYear('');
-
+      setRating(5);
+      setImageBase64(''); // Limpiar la imagen cargada
+  
       // Redirigir al home
       navigate('/');
     } catch (error) {
@@ -88,6 +129,25 @@ const InsertarPelicula = () => {
         <div>
           <label>Año:</label>
           <input type="number" value={year} onChange={(e) => setYear(e.target.value)} />
+        </div>
+        <div>
+          <label>Calificación:</label>
+          <input
+            type="number"
+            value={rating}
+            onChange={(e) => setRating(e.target.value)}
+            min="1"
+            max="10"
+          />
+        </div>
+        <div>
+          <label>Imagen:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
+          {imageBase64 && <img src={imageBase64} alt="Imagen del poster" style={{ width: '100px' }} />}
         </div>
         <button type="submit">Crear Película</button>
       </form>

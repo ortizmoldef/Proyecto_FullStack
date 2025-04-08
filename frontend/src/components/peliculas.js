@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Peliculas = () => {
   const [movies, setMovies] = useState([]);
-  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [genre, setGenre] = useState('');
-  const [year, setYear] = useState('');
-
+  const [message, setMessage] = useState('');
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
+  const navigate = useNavigate();
 
+  // Fetch movies from the API
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -36,62 +33,23 @@ const Peliculas = () => {
     }
   }, [token]);
 
-  const handleEditMovie = (movie) => {
-    setSelectedMovie(movie);
-    setTitle(movie.title);
-    setDescription(movie.description);
-    setGenre(movie.genre);
-    setYear(movie.year);
+  const handleEditMovie = (movieId) => {
+    navigate(`/editar-pelicula/${movieId}`);  // Redirigir al componente de edición
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!title || !description || !genre || !year) {
-      setError('Por favor, complete todos los campos.');
-      return;
+  const handleDeleteMovie = async (movieId) => {
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/eliminar_pelicula/${movieId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMovies(movies.filter((movie) => movie._id !== movieId));
+      setMessage('Película eliminada con éxito');
+    } catch (err) {
+      console.error('Error al eliminar la película:', err);
+      setError('No se pudo eliminar la película.');
     }
-
-    if (selectedMovie) {
-      // Realizamos la actualización en la base de datos
-      try {
-        const response = await axios.put(
-          `http://localhost:5000/api/modificar_pelicula/${selectedMovie._id}`, // Enviar el ID de la película a actualizar
-          {
-            title,
-            description,
-            genre,
-            year,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        // Actualizamos la lista de películas con los nuevos datos
-        setMovies((prevMovies) =>
-          prevMovies.map((movie) =>
-            movie._id === selectedMovie._id
-              ? { ...movie, title, description, genre, year }
-              : movie
-          )
-        );
-
-        setMessage('Película actualizada con éxito');
-        setSelectedMovie(null); // Deseleccionamos la película después de editar
-      } catch (error) {
-        console.error('Error al actualizar la película:', error);
-        setError('No se pudo actualizar la película.');
-      }
-    }
-
-    // Limpiar los campos
-    setTitle('');
-    setDescription('');
-    setGenre('');
-    setYear('');
   };
 
   return (
@@ -105,55 +63,17 @@ const Peliculas = () => {
           <li key={movie._id}>
             <p><strong>{movie.title}</strong></p>
             <p>{movie.description}</p>
-            <p>{movie.genre} - {movie.year}</p>
+            <p>{movie.genre.join(', ')} - {movie.year}</p>
+            <img src={movie.poster} alt={movie.title} style={{ width: '100px' }} />
             {role === 'admin' && (
-              <button onClick={() => handleEditMovie(movie)}>Editar</button>
+              <>
+                <button onClick={() => handleEditMovie(movie._id)}>Editar</button>
+                <button onClick={() => handleDeleteMovie(movie._id)}>Eliminar</button>
+              </>
             )}
           </li>
         ))}
       </ul>
-
-      {/* Formulario de edición */}
-      {selectedMovie && (
-        <div>
-          <h3>Editar Película</h3>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Título:</label>
-              <input
-                type="text"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Descripción:</label>
-              <input
-                type="text"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Género:</label>
-              <input
-                type="text"
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
-              />
-            </div>
-            <div>
-              <label>Año:</label>
-              <input
-                type="number"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-              />
-            </div>
-            <button type="submit">Actualizar Película</button>
-          </form>
-        </div>
-      )}
     </div>
   );
 };

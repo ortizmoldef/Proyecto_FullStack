@@ -13,5 +13,6 @@ router.put('/modificar_pelicula/:id', authMiddleware , movieController.updateMov
 router.delete('/eliminar_pelicula/:id', authMiddleware , movieController.deleteMovie);
 
 router.get('/obtener_peliculas', authMiddleware, movieController.getAllMovies)
+router.get('/obtener_peliculas/:id', authMiddleware, movieController.getMovieById)
 
 module.exports = router;

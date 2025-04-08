@@ -1,39 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Peliculas from './components/peliculas';
 import Register from './components/Register';
 import Login from './components/Login';
 import Header from './components/header';
 import InsertarPelicula from './components/insertarPelicula';
+import EditarPelicula from './components/EditarPelicula';
+import { AppProvider } from './context/AuthContext';  // Asegúrate de importar correctamente
 
 function App() {
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [movies, setMovies] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);  
-  const [role, setRole] = useState('user');  
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userRole = localStorage.getItem('role');
-    if (token) {
-      setIsLoggedIn(true);
-      setRole(userRole || 'user');
-    }
-  }, []);
-
   return (
-    <Router>
-      <div>
-        <Header setMessage={setMessage} setError={setError} setMovies={setMovies} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setRole={setRole} />
-        <Routes>
-          <Route path="/" element={<Peliculas />} />
-          <Route path="/insertar-pelicula" element={<InsertarPelicula />}/>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} />} />
-        </Routes>
-      </div>
-    </Router>
+    <AppProvider>  {/* Proveedor del contexto */}
+      <Router>
+        <div>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Peliculas />} />
+            <Route path="/insertar-pelicula" element={<InsertarPelicula />} />
+            <Route path="/editar-pelicula/:id" element={<EditarPelicula />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
+      </Router>
+    </AppProvider>
   );
 }
 

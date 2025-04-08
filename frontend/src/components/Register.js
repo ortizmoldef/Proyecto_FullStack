@@ -1,27 +1,27 @@
-// Register.js (React)
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  
+import { useNavigate } from 'react-router-dom';
+import styles from '../css/register.scss';  // Asegúrate de importar correctamente el archivo SCSS
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();  
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log({ username, password });  // Verifica los datos antes de enviarlos
+            console.log({ username, password });
             const response = await axios.post('http://localhost:5000/api/register', { username, password });
-            console.log(response.data);  // Imprimir respuesta exitosa
-            navigate('/login');  
+            console.log(response.data);
+            navigate('/login');
         } catch (error) {
             console.log('Error al registrar el usuario', error.response ? error.response.data : error);
         }
     };
 
     return (
-        <div>
+        <div className={styles['register-container']}>
             <h2>Registro</h2>
             <form onSubmit={handleSubmit}>
                 <input 
@@ -36,10 +36,10 @@ const Register = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button type='submit'>Registrarse</button>
+                <button className={styles['register-button']} type='submit'>Registrarse</button>
             </form>
         </div>
-    )
+    );
 }
 
 export default Register;
