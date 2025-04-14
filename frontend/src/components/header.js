@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';  // Sólo importas React
 import { Link } from 'react-router-dom';
 import { FaFilm, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaPlusCircle } from 'react-icons/fa';
 import { useAppContext } from '../context/AuthContext';  // Importa el contexto
 import '../css/header.scss'; // Importamos el archivo SASS
 
 const Header = () => {
-  const { isLoggedIn, role, logout, message, error } = useAppContext();  // Accede al contexto
+  const { isLoggedIn, role, logout, error } = useAppContext();  // Accede al contexto
 
   return (
     <nav className="navbar">
@@ -33,8 +33,7 @@ const Header = () => {
         )}
       </ul>
 
-      {/* Mostrar mensajes de error o éxito */}
-      {message && <p className="message">{message}</p>}
+      {/* Mostrar mensajes de error */}
       {error && <p className="error">{error}</p>}
     </nav>
   );

@@ -104,10 +104,30 @@ const getMovieById = async (req, res) => {
     }
   };
 
+const searchMovie = async (req, res) => {
+    const { query } = req.query;
+
+  try {
+    if (!query) {
+      return res.status(400).json({ error: 'Falta el parámetro de búsqueda' });
+    }
+
+    const peliculas = await Movie.find({
+      title: { $regex: query, $options: 'i' }  // Búsqueda insensible a mayúsculas
+    });
+
+    res.json(peliculas);
+  } catch (error) {
+    console.error('Error en búsqueda de películas:', error);
+    res.status(500).json({ error: 'Error al buscar películas' });
+  }
+    }
+
 module.exports = {
     createMovie,
     updateMovie,
     deleteMovie,
     getAllMovies,
-    getMovieById
+    getMovieById,
+    searchMovie
 };

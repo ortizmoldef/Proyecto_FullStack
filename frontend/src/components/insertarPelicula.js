@@ -14,28 +14,27 @@ const InsertarPelicula = () => {
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
-
+  
     if (file) {
       const maxSize = 5 * 1024 * 1024; // 5MB
-
-      // Verificar si el archivo supera el tamaño máximo
-      if (file.size > maxSize) {
-        setError('El archivo es demasiado grande. El tamaño máximo permitido es 5MB.');
-        setImageBase64('');  // Limpiar la imagen cargada
-        return;
-      }
-
       const reader = new FileReader();
-
+  
       reader.onloadend = () => {
-        setImageBase64(reader.result); // Guardamos la imagen como Base64
+        const base64String = reader.result;
+        // Verificar el tamaño de la cadena Base64 (aproximadamente 33% más grande que el archivo binario original)
+        if (base64String.length > maxSize * 1.33) {
+          setError('La imagen es demasiado grande. El tamaño máximo permitido es 5MB.');
+          setImageBase64('');  // Limpiar la imagen cargada
+          return;
+        }
+  
+        setImageBase64(base64String);
         setError('');  // Limpiar cualquier error si la imagen es válida
       };
-
+  
       reader.readAsDataURL(file); // Convierte el archivo a Base64
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -45,7 +44,6 @@ const InsertarPelicula = () => {
       return;
     }
   
-    // Verificar si hay un error en la imagen antes de enviar los datos
     if (error) {
       setMessage('');
       return;
@@ -57,7 +55,7 @@ const InsertarPelicula = () => {
       genre, 
       year, 
       rating, 
-      poster: imageBase64 // ✅ Aquí cambiaste 'poster' por 'imageBase64'
+      poster: imageBase64
     };
   
     try {
@@ -66,15 +64,15 @@ const InsertarPelicula = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(newMovie),
       });
   
       if (!response.ok) {
         const errorData = await response.json();
-        if (response.status === 409) {
-          setError(errorData.message);  // Mostrar mensaje de error si ya existe la película
+        if (response.status === 413) {
+          setError(errorData.message); // Error específico cuando la imagen es demasiado grande
           setMessage('');
           return;
         }
@@ -82,7 +80,7 @@ const InsertarPelicula = () => {
       }
   
       setMessage('Película creada con éxito');
-      setError('');  // Limpiar el mensaje de error
+      setError('');
   
       // Limpiar campos
       setTitle('');
@@ -95,10 +93,11 @@ const InsertarPelicula = () => {
       // Redirigir al home
       navigate('/');
     } catch (error) {
-      setError(error.message);  // Mostrar error en caso de fallo
+      setError(error.message); // Mostrar error en caso de fallo
       setMessage('');
     }
   };
+  
 
   return (
     <div>

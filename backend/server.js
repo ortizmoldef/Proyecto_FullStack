@@ -5,24 +5,39 @@ require('dotenv').config({
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
-console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
-
 const moviesRoutes = require('./routes/routesMovie'); 
 const usersRoutes = require('./routes/routesUser'); 
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(express.json());
+console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
+
+// Middleware con límite de 5MB para JSON y URL encoded
+app.use(express.json({ limit: '5mb' }));
+app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+
+
 app.use(cors({
+    origin: 'http://localhost:3000', // Permite solicitudes solo desde este origen
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Si necesitas enviar cookies o tokens de sesión
+  }));
 
 // Rutas
 app.use('/api', moviesRoutes);
 app.use('/api', usersRoutes);
+
+// Manejo del error PayloadTooLargeError
+app.use((err, req, res, next) => {
+    if (err.type === 'entity.too.large') {
+        return res.status(413).json({
+            message: 'La imagen es demasiado grande. Intenta con una menor a 5MB.'
+        });
+    }
+    next(err);
+});
 
 // Conectar a MongoDB
 const connectDB = async () => {
@@ -38,7 +53,6 @@ const connectDB = async () => {
     }
 };
 
-// Llamar la conexión
 connectDB();
 
 // Ruta principal
@@ -48,5 +62,5 @@ app.get('/', (req, res) => {
 
 // Iniciar el servidor
 app.listen(PORT, () => {
-    console.log(`🔥 Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

@@ -1,9 +1,9 @@
 {
   "type": "commonjs",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=Development nodemon server.js",
-    "start:prod": "cross-env NODE_ENV=Production nodemon  server.js"
-  },
+  "start:dev": "cross-env NODE_ENV=development nodemon server.js",
+  "start:prod": "cross-env NODE_ENV=production node server.js"
+},
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
