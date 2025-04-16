@@ -1,26 +1,32 @@
 const jwt = require('jsonwebtoken');
 
 const authJWT = async (req, res, next) => {
-    // Verificar que el token esté presente en el encabezado Authorization
-    const token = req.headers.authorization && req.headers.authorization.split(' ')[1]; // Extracción correcta del token
+  const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
-    if (!token) {
-        return res.status(401).json({ mensaje: "No se proporcionó el token" });
+  if (!token) {
+    return res.status(401).json({ mensaje: "No se proporcionó el token" });
+  }
+
+  try {
+    // Verificar el token con la clave secreta
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    req.user = decoded;
+
+    next();
+  } catch (err) {
+    console.error('Error al verificar el token:', err);
+
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ mensaje: "El token ha expirado. Por favor, inicie sesión nuevamente." });
     }
 
-    try {
-        // Verificar el token usando await, esto es asíncrono
-        const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-
-        // Almacenamos el usuario decodificado en la request para usarlo en otras rutas si es necesario
-        req.user = decoded;
-
-        // Si el token es válido, pasamos al siguiente middleware o controlador
-        next();
-    } catch (err) {
-        console.error(err);
-        return res.status(403).json({ mensaje: "Token inválido o expirado" });
+    if (err.name === 'JsonWebTokenError') {
+      return res.status(403).json({ mensaje: "Token inválido. Por favor, inicie sesión nuevamente." });
     }
+
+    return res.status(500).json({ mensaje: "Error al procesar el token. Intente de nuevo." });
+  }
 };
 
 module.exports = authJWT;

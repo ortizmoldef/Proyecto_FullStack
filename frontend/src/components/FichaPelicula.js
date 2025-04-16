@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import '../css/fichaPelicula.scss';
 
 const FichaPelicula = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ const FichaPelicula = () => {
   if (!pelicula) return <div>Cargando...</div>;
 
   return (
-    <div>
+    <div className='ficha-pelicula'>
       <h2>{pelicula.title}</h2>
       <img src={pelicula.poster} alt={pelicula.title} style={{ width: '200px' }} />
       <p><strong>Descripción:</strong> {pelicula.description}</p>

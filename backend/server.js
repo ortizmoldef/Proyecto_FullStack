@@ -7,7 +7,7 @@ const express = require('express');
 const cors = require('cors');
 const moviesRoutes = require('./routes/routesMovie'); 
 const usersRoutes = require('./routes/routesUser'); 
-
+const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -39,6 +39,10 @@ app.use((err, req, res, next) => {
     next(err);
 });
 
+// Middleware de manejor de Error
+app.use(errorHandler);
+
+
 // Conectar a MongoDB
 const connectDB = async () => {
     try {
@@ -54,6 +58,8 @@ const connectDB = async () => {
 };
 
 connectDB();
+
+
 
 // Ruta principal
 app.get('/', (req, res) => {

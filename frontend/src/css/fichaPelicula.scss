@@ -1,0 +1,63 @@
+/* Centrado del componente ficha-pelicula */
+.ficha-pelicula {
+    display: flex;
+    flex-direction: column;  /* Asegura que los elementos se apilen verticalmente */
+    justify-content: center; /* Centra el contenido verticalmente */
+    align-items: center;     /* Centra el contenido horizontalmente */
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+    margin: 2rem auto; /* Centrado horizontal y separación desde los bordes */
+  
+    width: 100%;
+    max-width: 800px; /* Tamaño máximo para la tarjeta */
+  
+    /* Título */
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+  
+    /* Imagen de la película */
+    img {
+      width: 100%;
+      max-width: 300px;
+      height: 200px; /* Establece una altura fija */
+      object-fit: cover; /* Asegura que la imagen se recorte proporcionalmente sin deformarse */
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+  
+    /* Información adicional */
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 0.8rem;
+      color: #444;
+  
+      strong {
+        color: #222;
+      }
+    }
+  
+    /* Para pantallas pequeñas */
+    @media (max-width: 600px) {
+      padding: 1rem;
+  
+      h2 {
+        font-size: 1.5rem;
+      }
+  
+      img {
+        max-width: 100%;
+        height: 180px;
+      }
+  
+      p {
+        font-size: 1rem;
+      }
+    }
+  }
+  

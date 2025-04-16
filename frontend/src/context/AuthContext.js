@@ -1,52 +1,43 @@
-// AppContext.js
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';  // Importa useNavigate
 
-export const AppContext = createContext();
+const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
+  const [role, setRole] = useState(null);
+  const navigate = useNavigate();  // Inicializa el hook useNavigate
 
-  // Restaurar la sesión desde localStorage cuando se recarga la página
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedRole = localStorage.getItem('role');
 
     if (token) {
-      setIsLoggedIn(true); // El usuario está logueado
-      setRole(storedRole || ''); // Establecer el rol si está guardado
+      setIsLoggedIn(true);
+      setRole(storedRole);
     }
   }, []);
 
-  const login = (newToken, newRole) => {
+  const login = (token, userRole) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('role', userRole);
     setIsLoggedIn(true);
-    setRole(newRole);
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('role', newRole);
+    setRole(userRole);
   };
 
   const logout = () => {
-    // Eliminar elementos de localStorage
     localStorage.removeItem('token');
-    localStorage.removeItem('user');
     localStorage.removeItem('role');
-    
-    // Limpiar el estado de autenticación
     setIsLoggedIn(false);
-    setRole('');
-    setMessage('Has cerrado sesión correctamente');
-    setError(null); // Limpiar posibles errores
+    setRole(null);
+    navigate('/login');  // Redirige al login cuando el usuario cierre sesión
   };
 
   return (
-    <AppContext.Provider value={{ isLoggedIn, role, message, error, login, logout }}>
+    <AppContext.Provider value={{ isLoggedIn, role, login, logout }}>
       {children}
     </AppContext.Provider>
   );
 };
 
-export const useAppContext = () => {
-  return useContext(AppContext);
-};
+export const useAppContext = () => useContext(AppContext);

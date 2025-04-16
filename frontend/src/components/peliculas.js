@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import BuscadorPeliculas from './buscadorPeliculas';
+import '../css/peliculas.scss'; // Importa el archivo de estilo SCSS
 
 const Peliculas = () => {
   const [movies, setMovies] = useState([]); // Películas originales
   const [filteredMovies, setFilteredMovies] = useState([]); // Películas filtradas por búsqueda
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [isEditing, setIsEditing] = useState(false); // Estado para saber si estamos editando
+  const [editData, setEditData] = useState({ title: '', genre: '' }); // Datos para edición masiva
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
   const navigate = useNavigate();
@@ -21,11 +24,17 @@ const Peliculas = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setMovies(response.data); // Guardamos todas las películas
-        setFilteredMovies(response.data); // Inicializamos las películas filtradas con todas las películas
+        setMovies(response.data);
+        setFilteredMovies(response.data);
       } catch (err) {
         console.error('Error al obtener las películas:', err);
-        setError('No se pudieron obtener las películas.');
+        if (err.response?.data?.mensaje === 'jwt expired') {
+          localStorage.removeItem('token');
+          localStorage.removeItem('role');
+          navigate('/login');
+        } else {
+          setError('No se pudieron obtener las películas.');
+        }
       }
     };
 
@@ -34,30 +43,72 @@ const Peliculas = () => {
     } else {
       setError('No hay token de autenticación.');
     }
-  }, [token]);
+  }, [token, navigate]);
 
-  const handleEditMovie = (movieId) => {
-    navigate(`/modificar_pelicula/${movieId}`);
+  // Eliminar todas las películas
+  const handleDeleteMovies = async () => {
+    try {
+      await Promise.all(
+        filteredMovies.map((movie) =>
+          axios.delete(`http://localhost:5000/api/eliminar_pelicula/${movie._id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        )
+      );
+      setMovies([]);
+      setFilteredMovies([]);
+      setMessage('Todas las películas han sido eliminadas con éxito');
+    } catch (err) {
+      console.error('Error al eliminar las películas:', err);
+      if (err.response?.data?.mensaje === 'jwt expired') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        navigate('/login');
+      } else {
+        setError('No se pudieron eliminar las películas.');
+      }
+    }
   };
 
-  const handleDeleteMovie = async (movieId) => {
+  // Editar todas las películas
+  const handleEditMovies = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/eliminar_pelicula/${movieId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const updatedMovies = filteredMovies.map((movie) => {
+        return axios.put(`http://localhost:5000/api/modificar_pelicula/${movie._id}`, editData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       });
-      setMovies(movies.filter((movie) => movie._id !== movieId)); // Elimina de la lista original
-      setFilteredMovies(filteredMovies.filter((movie) => movie._id !== movieId)); // Elimina de la lista filtrada
-      setMessage('Película eliminada con éxito');
+
+      await Promise.all(updatedMovies);
+      setMessage('Todas las películas han sido actualizadas.');
+      setIsEditing(false); // Detener edición masiva
     } catch (err) {
-      console.error('Error al eliminar la película:', err);
-      setError('No se pudo eliminar la película.');
+      console.error('Error al editar las películas:', err);
+      if (err.response?.data?.mensaje === 'jwt expired') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        navigate('/login');
+      } else {
+        setError('No se pudieron actualizar las películas.');
+      }
     }
   };
 
   const handleClickImagen = (movieId) => {
     navigate(`/obtener_peliculas/${movieId}`);
+  };
+
+  // Función para manejar los cambios en el formulario de edición masiva
+  const handleEditInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   // Esta es la función que se pasará a BuscadorPeliculas
@@ -71,39 +122,35 @@ const Peliculas = () => {
   };
 
   return (
-    <div>
-      {/* Pasamos la función manejarResultadosBusqueda y manejarBorrarBusqueda como props */}
-      <BuscadorPeliculas 
-        onResultados={manejarResultadosBusqueda}
-        onBorrarBusqueda={manejarBorrarBusqueda}
-      />
-      
-      {message && <div style={{ color: 'green' }}>{message}</div>}
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+    <div className="peliculas-container">
+      {/* HEADER CON ACCIONES */}
+      <div className="header-actions">
+        <BuscadorPeliculas 
+          onResultados={manejarResultadosBusqueda}
+          onBorrarBusqueda={manejarBorrarBusqueda}
+        />
+      </div>
 
-      <h3>Lista de Películas</h3>
-      <ul>
+      {/* Mensajes */}
+      {message && <div className="message success">{message}</div>}
+      {error && <div className="message error">{error}</div>}
+
+      {/* LISTA DE PELÍCULAS */}
+      <div className="peliculas-lista">
         {filteredMovies.length > 0 ? (
           filteredMovies.map((movie) => (
-            <li key={movie._id}>
+            <div key={movie._id} className="pelicula-item">
               <img
                 src={movie.poster}
                 alt={movie.title}
-                style={{ width: '100px', cursor: 'pointer' }}
                 onClick={() => handleClickImagen(movie._id)}
               />
-              {role === 'admin' && (
-                <>
-                  <button onClick={() => handleEditMovie(movie._id)}>Editar</button>
-                  <button onClick={() => handleDeleteMovie(movie._id)}>Eliminar</button>
-                </>
-              )}
-            </li>
+            </div>
           ))
         ) : (
           <p>No se encontraron películas.</p>
         )}
-      </ul>
+      </div>
     </div>
   );
 };

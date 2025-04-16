@@ -37,6 +37,7 @@ const BuscadorPeliculas = ({ onResultados, onBorrarBusqueda }) => {
 
   return (
     <div className="buscador">
+         <h3>Lista de Películas</h3>
       <form onSubmit={buscarPeliculas}>
         <input
           type="text"

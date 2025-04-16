@@ -1,160 +1,135 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import '../css/editarPelicula.scss'; // Importamos el archivo SASS
 
 const EditarPelicula = () => {
+  const [movie, setMovie] = useState(null);
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
   const [genre, setGenre] = useState('');
+  const [description, setDescription] = useState('');
   const [year, setYear] = useState('');
-  const [rating, setRating] = useState(5);
-  const [imageBase64, setImageBase64] = useState('');
+  const [poster, setPoster] = useState('');
+  const [rating, setRating] = useState('');
   const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
-
   const { id } = useParams();
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
-  const token = localStorage.getItem('token'); // Obtiene el token desde localStorage
 
   useEffect(() => {
     const fetchMovie = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/obtener_peliculas/${id}`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Envía el token en la cabecera
+            Authorization: `Bearer ${token}`,
           },
         });
-
-        const movie = response.data;
-        setTitle(movie.title);
-        setDescription(movie.description);
-        setGenre(Array.isArray(movie.genre) ? movie.genre.join(', ') : '');
-        setYear(movie.year);
-        setImageBase64(movie.poster);
-        setRating(movie.rating);
-        setError('');
+        setMovie(response.data);
+        setTitle(response.data.title);
+        setGenre(response.data.genre);
+        setDescription(response.data.description);
+        setYear(response.data.year);
+        setPoster(response.data.poster);
+        setRating(response.data.rating);
       } catch (err) {
-        console.error('❌ Error al obtener la película:', err.response?.data || err.message);
-        setError('No se pudo obtener la película. Verifica la URL o tu token.');
+        console.error('Error al obtener la película:', err);
+        setError('No se pudo obtener la película para editar.');
       }
     };
 
-    if (id && token) {
-      fetchMovie(); // Si hay ID y token, llama a la función para obtener la película
-    } else {
-      setError('Falta el ID o el token.');
+    if (id) {
+      fetchMovie();
     }
-  }, [id, token]); // Se ejecuta cada vez que cambian id o token
+  }, [id, token]);
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageBase64(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!title || !description || !genre || !year) {
-      setError('Por favor, complete todos los campos.');
-      return;
-    }
-
-    const movieData = {
-      title,
-      description,
-      genre: genre.split(',').map(g => g.trim()),
-      year,
-      poster: imageBase64,
-      rating,
-    };
-
+  const handleSaveChanges = async () => {
     try {
-      const response = await axios.put(
-        `http://localhost:5000/api/modificar_pelicula/${id}`,
-        movieData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log('✅ Película actualizada:', response.data);
-      setMessage('Película actualizada con éxito');
-      setError('');
-      navigate('/')
+      const updatedMovie = { title, description, genre, year, poster, rating };
+      console.log("Datos a actualizar:", updatedMovie);
+      await axios.put(`http://localhost:5000/api/modificar_pelicula/${id}`, updatedMovie, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      navigate('/modificar_pelicula');
     } catch (err) {
-      console.error('❌ Error al actualizar:', err.response?.data || err.message);
-      setError('Error al actualizar la película.');
+      console.error('Error al actualizar la película:', err);
+      setError('No se pudo actualizar la película.');
     }
   };
+
 
   return (
-    <div>
-      <h2>Editar Película</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      {message && <div style={{ color: 'green' }}>{message}</div>}
-
-      <form onSubmit={handleSubmit}>
+    <div className="editar-pelicula-container">
+      {error && <div className="message error">{error}</div>}
+      {movie && (
         <div>
-          <label>Título:</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <h2>Editar Película: {movie.title}</h2>
+          <label>
+            Título:
+            <input
+              type="text"
+              value={title || ''}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </label>
+          <label>
+            Género:
+            <input
+              type="text"
+              value={genre || ''}
+              onChange={(e) => setGenre(e.target.value)}
+            />
+          </label>
+          <label>
+            Descripción:
+            <textarea
+              value={description || ''}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </label>
+          <label>
+            Año:
+            <input
+              type="number"
+              value={year || ''}
+              onChange={(e) => setYear(e.target.value)}
+            />
+          </label>
+          <label>
+            Poster:
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setPoster(reader.result); // base64
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+          </label>
+          {poster && (
+            <div>
+              <p>Vista previa del póster:</p>
+              <img src={poster} alt="Poster preview" style={{ width: '200px', borderRadius: '8px' }} />
+            </div>
+          )}
+          <label>
+            Rating:
+            <input
+              type="number"
+              value={rating || ''}
+              onChange={(e) => setRating(e.target.value)}
+            />
+          </label>
+          <button onClick={handleSaveChanges}>Guardar Cambios</button>
         </div>
-        <div>
-          <label>Descripción:</label>
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Género:</label>
-          <input
-            type="text"
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Año:</label>
-          <input
-            type="number"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Calificación:</label>
-          <input
-            type="number"
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-            min="1"
-            max="10"
-          />
-        </div>
-        <div>
-          <label>Imagen:</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-          />
-          {imageBase64 && <img src={imageBase64} alt="Poster" style={{ width: '100px' }} />}
-        </div>
-        <button type="submit">Actualizar Película</button>
-      </form>
+      )}
     </div>
   );
 };

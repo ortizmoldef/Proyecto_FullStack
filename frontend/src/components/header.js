@@ -1,4 +1,4 @@
-import React from 'react';  // Sólo importas React
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaFilm, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaPlusCircle } from 'react-icons/fa';
 import { useAppContext } from '../context/AuthContext';  // Importa el contexto
@@ -10,21 +10,32 @@ const Header = () => {
   return (
     <nav className="navbar">
       <ul className="nav-list">
-        <li className="nav-item">
-          <Link to="/" className="nav-link"><FaFilm /> Películas</Link>
-        </li>
-        {role === 'admin' && (
+        {isLoggedIn && (
+          <li className="nav-item">
+            <Link to="/" className="nav-link"><FaFilm /> Películas</Link>
+          </li>
+        )}
+        {isLoggedIn && role === 'admin' && (
           <li className="nav-item">
             <Link to="/insertar-pelicula" className="nav-link"><FaPlusCircle /> Insertar Película</Link>
           </li>
         )}
-        <li className="nav-item">
-          <Link to="/register" className="nav-link"><FaUserPlus /> Registro</Link>
-        </li>
-        {!isLoggedIn && (
+
+          {isLoggedIn && role === 'admin' && (
           <li className="nav-item">
-            <Link to="/login" className="nav-link"><FaSignInAlt /> Iniciar Sesión</Link>
+            <Link to="/modificar_pelicula" className="nav-link"><FaPlusCircle /> Modificar Película</Link>
           </li>
+        )}
+
+        {!isLoggedIn && (
+          <>
+            <li className="nav-item">
+              <Link to="/register" className="nav-link"><FaUserPlus /> Registro</Link>
+            </li>
+            <li className="nav-item">
+              <Link to="/login" className="nav-link"><FaSignInAlt /> Iniciar Sesión</Link>
+            </li>
+          </>
         )}
         {isLoggedIn && (
           <li className="nav-item">

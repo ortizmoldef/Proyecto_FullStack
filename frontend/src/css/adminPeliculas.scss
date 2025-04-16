@@ -1,0 +1,95 @@
+.admin-peliculas {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  
+    &__titulo {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #333;
+    }
+  
+    &__error {
+      color: red;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+  
+    &__mensaje {
+      text-align: center;
+      font-style: italic;
+      color: #666;
+    }
+  
+    &__lista {
+      list-style: none;
+      padding: 0;
+    }
+  
+    &__item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f8f8f8;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      border-radius: 8px;
+      transition: background-color 0.2s ease;
+  
+      &:hover {
+        background-color: #eaeaea;
+      }
+    }
+  
+    &__info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+  
+    &__poster {
+      width: 60px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  
+    &__editar {
+      background-color: #000;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+  
+      &:hover {
+        background-color: #ff6f61;
+      }
+    }
+  
+    &__eliminar {
+      background-color: #dc3545;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+  
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+  
+    &__acciones {
+      display: flex;
+      gap: 1rem;
+    }
+  }
+  
