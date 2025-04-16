@@ -28,10 +28,8 @@ const createMovie = async (req, res) => {
     }
 };
 
-  
-
-  // Modificar las Peliculas
-  const updateMovie = async (req, res) => {
+// Modificar las Peliculas
+const updateMovie = async (req, res) => {
     const { id } = req.params;  // Obtener ID de la película desde la URL
     const { title, description, genre, year, poster, rating } = req.body;
 
@@ -57,41 +55,79 @@ const createMovie = async (req, res) => {
     }
 };
 
-    // Eliminar una película
-    const deleteMovie = async (req, res) => {
-        const { id } = req.params;  // Obtener el ID desde la URL
+// Eliminar una película
+const deleteMovie = async (req, res) => {
+    const { id } = req.params;  // Obtener el ID desde la URL
 
-        try {
-            // Intentar eliminar la película por ID
-            const deletedMovie = await Movie.findByIdAndDelete(id);
+    try {
+        // Intentar eliminar la película por ID
+        const deletedMovie = await Movie.findByIdAndDelete(id);
 
-            // Si no se encuentra la película, responder con un error
-            if (!deletedMovie) {
-                return res.status(404).json({ error: 'Película no encontrada' });
-            }
-
-            // Responder con la película eliminada
-            res.status(200).json({ message: 'Película eliminada con éxito', deletedMovie });
-        } catch (error) {
-            console.error('❌ Error al eliminar película:', error);
-            res.status(500).json({ error: 'Error interno del servidor' });
+        // Si no se encuentra la película, responder con un error
+        if (!deletedMovie) {
+            return res.status(404).json({ error: 'Película no encontrada' });
         }
-    };
 
-    //Obtener las peliculas
-    const getAllMovies = async (req, res) => {
-        try {
-            const movies = await Movie.find();  // Encuentra todas las películas en la base de datos
-            res.status(200).json(movies);  // Devuelve las películas en formato JSON
-        } catch (error) {
-            console.error('❌ Error al obtener las películas:', error);
-            res.status(500).json({ error: 'Error al obtener las películas' });
-        }
-    };
+        // Responder con la película eliminada
+        res.status(200).json({ message: 'Película eliminada con éxito', deletedMovie });
+    } catch (error) {
+        console.error('❌ Error al eliminar película:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+// Obtener todas las películas
+const getAllMovies = async (req, res) => {
+    try {
+        const movies = await Movie.find();  // Encuentra todas las películas en la base de datos
+        res.status(200).json(movies);  // Devuelve las películas en formato JSON
+    } catch (error) {
+        console.error('❌ Error al obtener las películas:', error);
+        res.status(500).json({ error: 'Error al obtener las películas' });
+    }
+};
+
+const getMovieById = async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+      const movie = await Movie.findById(id);
+      
+      if (!movie) {
+        return res.status(404).json({ error: 'Película no encontrada' });
+      }
+      
+      res.status(200).json(movie);
+    } catch (err) {
+      console.error('Error al obtener la película:', err);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };
+
+const searchMovie = async (req, res) => {
+    const { query } = req.query;
+
+  try {
+    if (!query) {
+      return res.status(400).json({ error: 'Falta el parámetro de búsqueda' });
+    }
+
+    const peliculas = await Movie.find({
+      title: { $regex: query, $options: 'i' }  // Búsqueda insensible a mayúsculas
+    });
+
+    res.json(peliculas);
+  } catch (error) {
+    console.error('Error en búsqueda de películas:', error);
+    res.status(500).json({ error: 'Error al buscar películas' });
+  }
+    }
 
 module.exports = {
     createMovie,
     updateMovie,
     deleteMovie,
-    getAllMovies
+    getAllMovies,
+    getMovieById,
+    searchMovie
 };

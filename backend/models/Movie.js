@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 // Crea el Esquema de una Pelicula
 const movieSchema = new mongoose.Schema({
   title: { type: String, required: true },

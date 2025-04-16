@@ -1,0 +1,112 @@
+/* Asegura que el contenedor principal ocupe toda la pantalla */
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Asegura que ocupe toda la altura de la pantalla */
+  margin: 0; /* Elimina márgenes predeterminados */
+}
+
+.register-container {
+  max-width: 500px;
+  width: 100%; /* Asegura que el contenedor no sobrepase el 100% del ancho */
+  padding: 2rem;
+  background-color: #fdfdfd;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  .register-form {
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el formulario dentro de su contenedor */
+
+    h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+      width: 100%;
+      
+      input {
+        padding: 0.6rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        width: 100%; /* Asegura que los inputs ocupen todo el ancho disponible */
+
+        &:focus {
+          border-color: #007bff;
+        }
+
+        &::placeholder {
+          color: #888;
+        }
+      }
+    }
+
+    .error-message,
+    .success-message {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    .error-message {
+      color: #d9534f;
+    }
+
+    .success-message {
+      color: #5cb85c;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .register-button {
+      padding: 0.75rem;
+      background-color: #000;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+
+      &:hover {
+        background-color: #ff6f61;
+      }
+    }
+  
+    p {
+      text-align: center;
+      margin-top: 1rem;
+  
+      a {
+        color: #ff6f61;
+        text-decoration: none;
+        font-weight: bold;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

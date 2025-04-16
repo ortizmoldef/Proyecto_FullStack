@@ -1,0 +1,92 @@
+/* Contenedor principal */
+.peliculas-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  /* Título */
+  h3 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+  }
+
+  /* Contenedor de las películas */
+  .peliculas-lista {
+    display: flex;
+    flex-wrap: wrap;  /* Permite que las películas se ajusten en filas */
+    gap: 2rem;  /* Espacio entre las películas */
+    justify-content: center;  /* Centra las películas en la fila */
+  }
+
+  /* Cada item de la película */
+  .pelicula-item {
+    width: calc(25% - 1rem); /* 4 columnas, considerando el gap */
+    box-sizing: border-box;
+    text-align: center;
+
+    /* Imagen de la película */
+    img {
+      width: 100%;
+      height: 200px; /* Establece una altura fija para todas las imágenes */
+      object-fit: cover; /* Asegura que la imagen se recorte proporcionalmente sin deformarse */
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+
+      &:hover {
+        transform: scale(1.1); /* Efecto de hover */
+      }
+    }
+
+    /* Botones de editar y eliminar */
+    button {
+      padding: 0.5rem 1rem;
+      background-color: #000;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #ff6f61;
+      }
+
+      & + button {
+        margin-left: 1rem;
+      }
+    }
+  }
+
+
+  /* Mensajes de error y éxito */
+  .message {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    &.error {
+      color: #d9534f;
+    }
+
+    &.success {
+      color: #5cb85c;
+    }
+  }
+
+  /* Para pantallas pequeñas, las películas se apilan */
+  @media (max-width: 768px) {
+    .pelicula-item {
+      width: calc(50% - 1rem); /* 2 columnas */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pelicula-item {
+      width: 100%; /* 1 columna */
+    }
+  }
+}

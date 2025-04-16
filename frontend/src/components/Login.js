@@ -1,60 +1,70 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAppContext } from '../context/AuthContext'; // Asegúrate de tener los métodos adecuados en el contexto
+import '../css/login.scss'; // Asegúrate de tener los estilos adecuados
 
-const Login = ({ setIsLoggedIn, setRole }) => {
+const Login = () => {
+  const { login } = useAppContext(); // Usamos el método login del contexto
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Reseteamos cualquier error previo
+    
     try {
       const response = await axios.post('http://localhost:5000/api/login', {
         email,
-        password
+        password,
       });
-
+  
       if (response.data && response.data.token && response.data.user) {
-        // Guardar el token y los datos del usuario en el localStorage
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        localStorage.setItem('role', response.data.user.role);
-
-        // Actualizar el estado local
-        setIsLoggedIn(true);
-        setRole(response.data.user.role);  // Actualizar el rol también
-
-        console.log('Inicio de sesión exitoso:', response.data);
-        navigate('/');  // Redirigir a la página principal
+        // Llamamos a login para guardar el token y rol
+        login(response.data.token, response.data.user.role);
+        navigate('/'); // Redirigimos a la página principal después de loguearse
       } else {
         console.error('Respuesta del servidor no contiene los datos esperados');
-        alert('Error al iniciar sesión');
+        setError('Error al iniciar sesión');
       }
     } catch (error) {
       console.error('Error al iniciar sesión:', error.response || error.message);
-      alert('Error al iniciar sesión. Verifica los datos e intenta nuevamente.');
+      setError('Error al iniciar sesión. Verifica los datos e intenta nuevamente.');
     }
   };
 
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Iniciar sesión</button>
-      </form>
+    <div className="login-container">
+      <div className="login-form">
+        <h2>Iniciar Sesión</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <input
+              type="email"
+              placeholder="Correo electrónico"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" className="btn">Iniciar sesión</button>
+        </form>
+        {error && <p className="error-message">{error}</p>}
+        <p>
+          ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
+        </p>
+      </div>
     </div>
   );
 };

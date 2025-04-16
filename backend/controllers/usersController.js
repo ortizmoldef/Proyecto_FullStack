@@ -6,6 +6,10 @@ const jwt = require('jsonwebtoken');
 const createUser = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
+
+         if (!name || !email || !password) {
+    return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+            }
     
         // Verificar si el correo ya está registrado
         const existingUser = await User.findOne({ email });
@@ -38,44 +42,35 @@ const createUser = async (req, res) => {
 // Logear el usuario una vez que esta creado.
 
 const loginUser = async (req, res) => {
-    try {
-        const { email, password } = req.body;
+    const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ error: "El email y la contraseña son obligatorios" });
-        }
+  try {
+    // Buscar al usuario por email (debes asegurarte de verificar que el usuario existe)
+    const user = await User.findOne({ email });
 
-        // Buscar el usuario por el correo electrónico
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ error: "Usuario no encontrado" });
-        }
-
-        // Verificar la contraseña
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ error: "Contraseña incorrecta" });
-        }
-
-        // Generar el token JWT
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        // Devolver el token + info del usuario
-        res.status(200).json({
-            token,
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role || 'user' // <- por si usas roles
-            }
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error al iniciar sesión" });
+    if (!user) {
+      return res.status(400).json({ mensaje: 'Usuario no encontrado' });
     }
-};
+
+    // Aquí debes verificar que la contraseña es correcta (esto dependerá de cómo guardas las contraseñas)
+    // Por ejemplo, usando bcrypt:
+    // const match = await bcrypt.compare(password, user.password);
+    // if (!match) return res.status(400).json({ mensaje: 'Contraseña incorrecta' });
+
+    // Generar el token
+    const token = jwt.sign(
+      { userId: user._id, role: user.role },  // Carga los datos del usuario en el token
+      process.env.JWT_SECRET,  // La clave secreta que usas en el backend
+      { expiresIn: '1h' }  // El token expira en 1 hora
+    );
+
+    // Enviar el token como respuesta
+    res.json({ token, user });  // Enviar el token y los datos del usuario
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ mensaje: 'Error en el servidor' });
+  }
+  };
 
 
 

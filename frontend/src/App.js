@@ -1,38 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Peliculas from './components/peliculas';
-import Register from './components/Register';
+import { AppProvider } from './context/AuthContext';
 import Login from './components/Login';
-import Header from './components/header';
+import Register from './components/Register';
+import Peliculas from './components/peliculas';
 import InsertarPelicula from './components/insertarPelicula';
+import EditarPelicula from './components/EditarPelicula';
+import FichaPelicula from './components/FichaPelicula';
+import Header from './components/header';
+import Footer from './components/Footer';
+import AdminPeliculas from './components/AdminPeliculas';
+
 
 function App() {
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [movies, setMovies] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);  
-  const [role, setRole] = useState('user');  
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userRole = localStorage.getItem('role');
-    if (token) {
-      setIsLoggedIn(true);
-      setRole(userRole || 'user');
-    }
-  }, []);
-
   return (
     <Router>
-      <div>
-        <Header setMessage={setMessage} setError={setError} setMovies={setMovies} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setRole={setRole} />
-        <Routes>
-          <Route path="/" element={<Peliculas />} />
-          <Route path="/insertar-pelicula" element={<InsertarPelicula />}/>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} setRole={setRole} />} />
-        </Routes>
-      </div>
+      <AppProvider>
+        <div className="App">
+          <Header />
+          <main>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={
+                  <Peliculas />
+              } />
+              <Route path="/insertar-pelicula" element={
+                  <InsertarPelicula />
+              } />
+              <Route path="/modificar_pelicula" element={<AdminPeliculas />} />
+              <Route path="/modificar_pelicula/:id" element={
+                  <EditarPelicula />
+              } />
+              <Route path="/obtener_peliculas/:id" element={
+                  <FichaPelicula />
+              } />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </AppProvider>
     </Router>
   );
 }
