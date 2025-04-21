@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import BuscadorPeliculas from './buscadorPeliculas';
 import '../css/peliculas.scss'; // Importa el archivo de estilo SCSS
+import useApiUrl from '../hooks/useApiUrl'
 
 const Peliculas = () => {
   const [movies, setMovies] = useState([]); // Películas originales
@@ -19,7 +20,7 @@ const Peliculas = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/obtener_peliculas', {
+        const response = await axios.get(`${apiUrl}:5000/api/obtener_peliculas`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -50,7 +51,7 @@ const Peliculas = () => {
     try {
       await Promise.all(
         filteredMovies.map((movie) =>
-          axios.delete(`http://localhost:5000/api/eliminar_pelicula/${movie._id}`, {
+          axios.delete(`${apiUrl}/api/eliminar_pelicula/${movie._id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -76,7 +77,7 @@ const Peliculas = () => {
   const handleEditMovies = async () => {
     try {
       const updatedMovies = filteredMovies.map((movie) => {
-        return axios.put(`http://localhost:5000/api/modificar_pelicula/${movie._id}`, editData, {
+        return axios.put(`${apiUrl}/api/modificar_pelicula/${movie._id}`, editData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
