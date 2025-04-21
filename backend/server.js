@@ -10,7 +10,7 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-const allowebOrigins = process.env.FRONTEND_URL;
+
 
 console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
 
@@ -18,6 +18,9 @@ console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
+const allowebOrigins = process.env.FRONTEND_URL || 'https://proyecto-full-stack-beta.vercel.app';
+
+console.log("Frontend URL:", allowebOrigins)
 app.use(cors({
   origin: allowebOrigins || 'http://localhost:3000', // Permite solicitudes solo desde este origen
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
