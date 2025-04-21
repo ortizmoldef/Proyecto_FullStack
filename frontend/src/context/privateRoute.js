@@ -9,6 +9,7 @@ const PrivateRoute = () => {
     return <div>Cargando...</div>; // o un spinner bonito si prefieres
   }
 
+  // si no estas logeado te manda a login
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;
   }
