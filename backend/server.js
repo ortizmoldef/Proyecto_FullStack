@@ -25,6 +25,10 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+// Ruta
+app.use('/api',moviesRoutes);
+
+app.use('/api',usersRoutes);
 
 
 // Manejo del error PayloadTooLargeError
@@ -58,12 +62,6 @@ const connectDB = async () => {
 
 connectDB();
 
-// Ruta principal
-app.use('/api',moviesRoutes);
-
-// Ruta
-app.use('/api',moviesRoutes);
-app.use('/api',usersRoutes);
 
 // Iniciar el servidor
 app.listen(PORT, () => {
