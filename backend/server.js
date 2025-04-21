@@ -39,6 +39,7 @@ app.use((err, req, res, next) => {
         });
     }
     next(err);
+    
 });
 
 // Middleware de manejor de Error
