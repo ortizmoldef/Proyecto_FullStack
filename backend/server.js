@@ -28,8 +28,8 @@ app.use(cors({
   credentials: true // Si necesitas enviar cookies o tokens
 }));
 // Ruta
-app.use(moviesRoutes);
-app.use(usersRoutes);
+app.use('/api',moviesRoutes);
+app.use('/api',usersRoutes);
 
 // Manejo del error PayloadTooLargeError
 app.use((err, req, res, next) => {
