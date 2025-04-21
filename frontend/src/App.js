@@ -23,8 +23,7 @@ function App() {
               {/* Rutas públicas */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              
-              
+
               {/* Rutas protegidas */}
               <Route element={<PrivateRoute />}>
               <Route path="/" element={<Peliculas />} />
