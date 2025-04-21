@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 // Configuración de CORS para permitir solicitudes desde tu frontend
 app.use(cors({
-  origin: '*', // Permite solicitudes desde tu frontend
+  origin: frontendUrl, // Permite solicitudes desde tu frontend
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true // Si necesitas enviar cookies o tokens
