@@ -33,7 +33,7 @@ function App() {
                 <Route path="/modificar_pelicula/:id" element={<EditarPelicula />} />
                 <Route path="/obtener_peliculas/:id" element={<FichaPelicula />} />
               </Route>
-            </Routes>
+            </Routes> 
           </main>
           <Footer />
         </div>
