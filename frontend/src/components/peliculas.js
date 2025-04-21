@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import BuscadorPeliculas from './buscadorPeliculas';
 import '../css/peliculas.scss'; // Importa el archivo de estilo SCSS
+import api from '../axios'; // Importamos el cliente Axios configurado
 
 const Peliculas = () => {
   const [movies, setMovies] = useState([]); // Películas originales
   const [filteredMovies, setFilteredMovies] = useState([]); // Películas filtradas por búsqueda
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
-  const [isEditing, setIsEditing] = useState(false); // Estado para saber si estamos editando
-  const [editData, setEditData] = useState({ title: '', genre: '' }); // Datos para edición masiva
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
   const navigate = useNavigate();
@@ -18,11 +16,9 @@ const Peliculas = () => {
 
 
   useEffect(() => {
-  
-    
     const fetchMovies = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/obtener_peliculas`, {
+        const response = await api.get(`/api/obtener_peliculas`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -49,70 +45,8 @@ const Peliculas = () => {
     }
   }, [token, navigate,]);
 
-  // Eliminar todas las películas
-  const handleDeleteMovies = async () => {
-    try {
-      await Promise.all(
-        filteredMovies.map((movie) =>
-          axios.delete(`http://localhost:5000/api/eliminar_pelicula/${movie._id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-        )
-      );
-      setMovies([]);
-      setFilteredMovies([]);
-      setMessage('Todas las películas han sido eliminadas con éxito');
-    } catch (err) {
-      console.error('Error al eliminar las películas:', err);
-      if (err.response?.data?.mensaje === 'jwt expired') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
-        navigate('/login');
-      } else {
-        setError('No se pudieron eliminar las películas.');
-      }
-    }
-  };
-
-  // Editar todas las películas
-  const handleEditMovies = async () => {
-    try {
-      const updatedMovies = filteredMovies.map((movie) => {
-        return axios.put(`http://localhost:5000/api/modificar_pelicula/${movie._id}`, editData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-      });
-
-      await Promise.all(updatedMovies);
-      setMessage('Todas las películas han sido actualizadas.');
-      setIsEditing(false); // Detener edición masiva
-    } catch (err) {
-      console.error('Error al editar las películas:', err);
-      if (err.response?.data?.mensaje === 'jwt expired') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('role');
-        navigate('/login');
-      } else {
-        setError('No se pudieron actualizar las películas.');
-      }
-    }
-  };
-
   const handleClickImagen = (movieId) => {
     navigate(`/obtener_peliculas/${movieId}`);
-  };
-
-  // Función para manejar los cambios en el formulario de edición masiva
-  const handleEditInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
   };
 
   // Esta es la función que se pasará a BuscadorPeliculas
