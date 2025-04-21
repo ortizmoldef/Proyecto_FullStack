@@ -59,7 +59,7 @@ const connectDB = async () => {
 connectDB();
 
 // Ruta principal
-app.use('/');
+app.use('/api',moviesRoutes);
 
 // Ruta
 app.use('/api',moviesRoutes);
