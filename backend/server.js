@@ -1,7 +1,6 @@
 require('dotenv').config({
     path: process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development'
 });
-const { allowCors } = require('./middleware/allowCors'); // Importar el middleware
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
@@ -10,7 +9,7 @@ const usersRoutes = require('./routes/routesUser');
 const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5000;
-const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+
 
 console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
 
