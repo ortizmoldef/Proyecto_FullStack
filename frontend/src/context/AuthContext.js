@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';  // Importa useNavigate
+import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
-  const navigate = useNavigate();  // Inicializa el hook useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -30,7 +30,7 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem('role');
     setIsLoggedIn(false);
     setRole(null);
-    navigate('/login');  // Redirige al login cuando el usuario cierre sesión
+    navigate('/login'); // Redirige al login cuando el usuario cierre sesión
   };
 
   return (

@@ -7,7 +7,7 @@ const InsertarPelicula = () => {
   const [description, setDescription] = useState('');
   const [genre, setGenre] = useState('');
   const [year, setYear] = useState('');
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(0);  // Cambié el valor por defecto a 0
   const [imageBase64, setImageBase64] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -87,7 +87,7 @@ const InsertarPelicula = () => {
       setDescription('');
       setGenre('');
       setYear('');
-      setRating(5);
+      setRating(0); // Reseteamos rating a 0 después de crear la película
       setImageBase64('');
 
       navigate('/');

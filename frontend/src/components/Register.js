@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';  // Asegúrate de agregar esta importación
 import '../css/register.scss';
-import useApiUrl from '../hook/useAPiUrl';
-
+import api from '../axios'; // Importamos el cliente Axios configurado
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,7 +10,6 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
 
-  const apiUrl = useApiUrl();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +25,7 @@ const Register = () => {
     }
   
     try {
-      const response = await axios.post(`${apiUrl}/api/register`, {
+      const response = await api.post(`/api/register`, {
         name,
         email,
         password,
@@ -37,7 +34,7 @@ const Register = () => {
       // Verificar si el backend devolvió una respuesta exitosa
       if (response.data && response.data.message === 'Usuario registrado con éxito.') {
         alert('Registro exitoso');
-        navigate('/');  // Redirige a la página principal
+        navigate('/login');  // Redirige a la página principal
       } else {
         alert(response.data.message || 'Error al registrar el usuario');
       }
