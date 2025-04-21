@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true); // 👈 Estado para saber si terminó de cargar
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +16,12 @@ export const AppProvider = ({ children }) => {
     if (token) {
       setIsLoggedIn(true);
       setRole(storedRole);
+    } else {
+      setIsLoggedIn(false);
+      setRole(null);
     }
+
+    setLoading(false); // 👈 Ya terminó de cargar
   }, []);
 
   const login = (token, userRole) => {
@@ -30,11 +36,11 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem('role');
     setIsLoggedIn(false);
     setRole(null);
-    navigate('/login'); // Redirige al login cuando el usuario cierre sesión
+    navigate('/login');
   };
 
   return (
-    <AppContext.Provider value={{ isLoggedIn, role, login, logout }}>
+    <AppContext.Provider value={{ isLoggedIn, role, login, logout, loading }}>
       {children}
     </AppContext.Provider>
   );

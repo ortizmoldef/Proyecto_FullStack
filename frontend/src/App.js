@@ -20,12 +20,14 @@ function App() {
           <Header />
           <main>
             <Routes>
+              {/* Rutas públicas */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/" element={<Peliculas />} />
+              
               
               {/* Rutas protegidas */}
               <Route element={<PrivateRoute />}>
+              <Route path="/" element={<Peliculas />} />
                 <Route path="/insertar-pelicula" element={<InsertarPelicula />} />
                 <Route path="/modificar_pelicula" element={<AdminPeliculas />} />
                 <Route path="/modificar_pelicula/:id" element={<EditarPelicula />} />

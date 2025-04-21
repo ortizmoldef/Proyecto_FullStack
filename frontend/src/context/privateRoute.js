@@ -1,16 +1,19 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAppContext } from '../context/AuthContext';
+import { useAppContext } from './AuthContext';
 
 const PrivateRoute = () => {
-  const { isLoggedIn } = useAppContext();
+  const { isLoggedIn, loading } = useAppContext();
 
-  // Si no está logueado, redirige al login
-  if (!isLoggedIn) {
-    return <Navigate to="/login" />;
+  if (loading) {
+    return <div>Cargando...</div>; // o un spinner bonito si prefieres
   }
 
-  return <Outlet />; // Si está logueado, renderiza la ruta protegida
+  if (!isLoggedIn) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default PrivateRoute;
