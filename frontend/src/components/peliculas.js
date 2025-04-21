@@ -20,6 +20,9 @@ const Peliculas = () => {
   const apiUrl = useApiUrl();
 
   useEffect(() => {
+    console.log('Fetching movies...');
+    console.log('API URL:', apiUrl);
+    
     const fetchMovies = async () => {
       try {
         const response = await axios.get(`${apiUrl}/api/obtener_peliculas`, {
@@ -27,6 +30,7 @@ const Peliculas = () => {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log('Movies fetched:', response.data);
         setMovies(response.data);
         setFilteredMovies(response.data);
       } catch (err) {
