@@ -27,9 +27,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true // Si necesitas enviar cookies o tokens
 }));
-// Rutas
-app.use('/api', moviesRoutes);
-app.use('/api', usersRoutes);
+// Ruta
+app.use(moviesRoutes);
+app.use(usersRoutes);
 
 // Manejo del error PayloadTooLargeError
 app.use((err, req, res, next) => {
