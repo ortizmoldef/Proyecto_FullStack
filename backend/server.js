@@ -4,10 +4,11 @@ require('dotenv').config({
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
-const moviesRoutes = require('./routes/routesMovie'); 
-const usersRoutes = require('./routes/routesUser'); 
+
 const errorHandler = require('./middleware/errorHandler');
 const app = express();
+const moviesRoutes = require('./routes/routesMovie'); 
+const usersRoutes = require('./routes/routesUser'); 
 const PORT = process.env.PORT || 5000;
 
 console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
@@ -18,7 +19,6 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 const allowebOrigins = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-console.log("Frontend URL:", allowebOrigins)
 app.use(cors({
   origin: allowebOrigins, // Permite solicitudes solo desde este origen
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -67,5 +67,6 @@ connectDB();
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
 
 module.exports = app;
