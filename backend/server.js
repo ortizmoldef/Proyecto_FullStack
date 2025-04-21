@@ -10,8 +10,6 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-
-
 console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
 
 // Middleware con límite de 5MB para JSON y URL encoded
@@ -60,12 +58,8 @@ const connectDB = async () => {
 
 connectDB();
 
-
-
 // Ruta principal
-app.get('/', (req, res) => {
-    res.send('🚀 API funcionando');
-});
+app.use('/');
 
 // Ruta
 app.use('/api',moviesRoutes);
