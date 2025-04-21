@@ -17,12 +17,21 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // Reseteamos cualquier error previo
-    
+  
     try {
-      const response = await axios.post(`${apiUrl}/api/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${apiUrl}/api/login`,
+        {
+          email,
+          password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true, // IMPORTANTE si tu backend requiere enviar cookies o autenticación cross-domain
+        }
+      );
   
       if (response.data && response.data.token && response.data.user) {
         // Llamamos a login para guardar el token y rol
@@ -37,7 +46,7 @@ const Login = () => {
       setError('Error al iniciar sesión. Verifica los datos e intenta nuevamente.');
     }
   };
-
+  
   return (
     <div className="login-container">
       <div className="login-form">
