@@ -10,6 +10,7 @@ const usersRoutes = require('./routes/routesUser');
 const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const PORT = process.env.PORT || 5000;
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
 
 // Middleware con límite de 5MB para JSON y URL encoded
@@ -17,25 +18,14 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 
-const allowedOrigins = [
-    'http://localhost:3000',
-     process.env.FRONTEND_URL,
-  ];
-  
-  app.use(cors({
-    origin: (origin, callback) => {
-      // Permite solicitudes sin origin (como en herramientas tipo Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('No permitido por CORS'));
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-  }));
-  
+
+// Configuración de CORS para permitir solicitudes desde tu frontend
+app.use(cors({
+  origin: [frontendUrl, 'http://localhost:3000'], // Permite solicitudes desde tu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Si necesitas enviar cookies o tokens
+}));
 // Rutas
 app.use('/api', moviesRoutes);
 app.use('/api', usersRoutes);
