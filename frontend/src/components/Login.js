@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppContext } from '../context/AuthContext'; // Asegúrate de tener los métodos adecuados en el contexto
-import useApiUrl from '../hook/useAPiUrl';  // Importa el hook useApiUrl para obtener la URL correcta
 import '../css/login.scss'; // Asegúrate de tener los estilos adecuados
+import useApiUrl from '../hook/useAPiUrl'; 
 
 const Login = () => {
   const { login } = useAppContext(); // Usamos el método login del contexto
@@ -11,10 +11,8 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  
-  // Llama al hook para obtener la URL de la API según el entorno
-  const apiUrl = useApiUrl();
 
+  const apiUrl = useApiUrl();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(''); // Reseteamos cualquier error previo
