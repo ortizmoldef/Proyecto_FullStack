@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';  // Asegúrate de agregar esta importación
 import '../css/register.scss';
+import useApiUrl from '../hook';  // Asegúrate de importar el hook useApiUrl
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -10,27 +11,30 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
+  
+  // Llama al hook para obtener la URL de la API según el entorno
+  const apiUrl = useApiUrl();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!name || !email || !password || !confirmPassword) {
       alert('Todos los campos son obligatorios');
       return;
     }
-  
+
     if (password !== confirmPassword) {
       alert('Las contraseñas no coinciden');
       return;
     }
-  
+
     try {
-      const response = await axios.post('http://localhost:5000/api/register', {
+      const response = await axios.post(`${apiUrl}/api/register`, {
         name,
         email,
         password,
       });
-  
+
       // Verificar si el backend devolvió una respuesta exitosa
       if (response.data && response.data.message === 'Usuario registrado con éxito.') {
         alert('Registro exitoso');
@@ -44,14 +48,14 @@ const Register = () => {
       alert('Error al registrar el usuario: ' + error.response?.data?.message || 'Error desconocido');
     }
   };
-  
+
   return (
     <div className="page-container">
       <div className="register-container">
         <div className="register-form">
           <h2>Registrarse</h2>
           <form onSubmit={handleSubmit}>
-          <div className="input-group">
+            <div className="input-group">
               <input
                 type="text"
                 placeholder="Nombre"
@@ -90,7 +94,7 @@ const Register = () => {
             <button className="register-button" type="submit">Registrar</button>
           </form>
           <p>
-            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link> {/* Reemplaza el <a> por <Link> */}
+            ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
           </p>
         </div>
       </div>
