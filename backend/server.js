@@ -23,7 +23,8 @@ app.use(cors({
     origin: [frontendUrl, 'http://localhost:3000'], // Permite solicitudes solo desde este origen
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true // Si necesitas enviar cookies o tokens de sesión
+    credentials: true, // Si necesitas enviar cookies o tokens de sesión
+    preflightContinue: false,
   }));
 
 // Rutas
