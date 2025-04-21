@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppContext } from '../context/AuthContext'; // Asegúrate de tener los métodos adecuados en el contexto
-import useApiUrl from '../hook';  // Importa el hook useApiUrl para obtener la URL correcta
+import useApiUrl from '../hook/useAPiUrl';  // Importa el hook useApiUrl para obtener la URL correcta
 import '../css/login.scss'; // Asegúrate de tener los estilos adecuados
 
 const Login = () => {

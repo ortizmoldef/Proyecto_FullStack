@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';  // Asegúrate de agregar esta importación
 import '../css/register.scss';
-import useApiUrl from '../hook';  // Asegúrate de importar el hook useApiUrl
+import useApiUrl from '../hook/useAPiUrl';  // Asegúrate de importar el hook useApiUrl
 
 const Register = () => {
   const [name, setName] = useState('');
