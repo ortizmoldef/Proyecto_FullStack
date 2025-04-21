@@ -21,12 +21,15 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 
 // Configuración de CORS para permitir solicitudes desde tu frontend
-app.use(cors({
-  origin: frontendUrl, // Permite solicitudes desde tu frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true // Si necesitas enviar cookies o tokens
-}));
+// Permitir preflight para todas las rutas
+app.options('*', cors({
+    origin: frontendUrl,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  }));
+  
+
 // Ruta
 app.use('/api',moviesRoutes);
 app.use('/api',usersRoutes);
