@@ -4,9 +4,9 @@ const registerController = require('../controllers/usersController');
 const allowCors = require('../middleware/allowCors'); // Asegúrate de aplicar CORS
 
 // Crear Usuario
-router.post('/register', allowCors(registerController.createUser));
+router.post('/register',registerController.createUser);
 
 // Login Usuario
-router.post('/login', allowCors(registerController.loginUser));
+router.post('/login', registerController.loginUser);
 
 module.exports = router;

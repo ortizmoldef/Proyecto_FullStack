@@ -1,41 +1,29 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAppContext } from '../context/AuthContext'; // Asegúrate de tener los métodos adecuados en el contexto
-import '../css/login.scss'; // Asegúrate de tener los estilos adecuados
-import useApiUrl from '../hook/useAPiUrl'; 
+import { useAppContext } from '../context/AuthContext';
+import '../css/login.scss';
+import api from '../axios'; // Importamos el cliente Axios configurado
 
 const Login = () => {
-  const { login } = useAppContext(); // Usamos el método login del contexto
+  const { login } = useAppContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const apiUrl = useApiUrl();
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Reseteamos cualquier error previo
-  
+    setError('');
+
     try {
-      const response = await axios.post(
-        `${apiUrl}/api/login`,
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-  
+      const response = await api.post('/login', {
+        email,
+        password,
+      });
+
       if (response.data && response.data.token && response.data.user) {
-        // Llamamos a login para guardar el token y rol
         login(response.data.token, response.data.user.role);
-        navigate('/'); // Redirigimos a la página principal después de loguearse
+        navigate('/');
       } else {
         console.error('Respuesta del servidor no contiene los datos esperados');
         setError('Error al iniciar sesión');
@@ -45,7 +33,7 @@ const Login = () => {
       setError('Error al iniciar sesión. Verifica los datos e intenta nuevamente.');
     }
   };
-  
+
   return (
     <div className="login-container">
       <div className="login-form">

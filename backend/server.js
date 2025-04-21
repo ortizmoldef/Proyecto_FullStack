@@ -18,17 +18,11 @@ console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
-
-
-// Configuración de CORS para permitir solicitudes desde tu frontend
-// Permitir preflight para todas las rutas
-app.options('*', cors({
-    origin: frontendUrl,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-  }));
-  
+app.use(cors({
+  origin: 'http://localhost:3000', // Permite solicitudes solo desde este origen
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // Ruta
 app.use('/api',moviesRoutes);
