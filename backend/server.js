@@ -4,7 +4,6 @@ require('dotenv').config({
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
-
 const errorHandler = require('./middleware/errorHandler');
 const app = express();
 const moviesRoutes = require('./routes/routesMovie'); 
@@ -17,14 +16,22 @@ console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
-const allowebOrigins = process.env.FRONTEND_URL || 'http://localhost:3000';
+const allowedOrigins = [
+    'https://proyecto-full-stack-beta.vercel.app',
+    'http://localhost:3000'
+  ];
 
 app.use(cors({
-  origin: allowebOrigins, // Permite solicitudes solo desde este origen
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
-
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Origen permitido
+      } else {
+        callback(new Error('Origen no permitido')); // Origen no permitido
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }));
 // Ruta
 app.use('/api',moviesRoutes);
 
