@@ -19,7 +19,6 @@ const Peliculas = () => {
   // Llamar al hook para obtener la API URL (asegurarse de que apiUrl esté definido)
   const apiUrl = useApiUrl();
 
-  // Fetch movies from the API
   useEffect(() => {
     const fetchMovies = async () => {
       try {
@@ -41,13 +40,13 @@ const Peliculas = () => {
         }
       }
     };
-
+  
     if (token) {
       fetchMovies();
     } else {
       setError('No hay token de autenticación.');
     }
-  }, [token, navigate, apiUrl]); // Asegúrate de incluir apiUrl en las dependencias
+  }, [token, navigate, apiUrl]);  // Asegúrate de incluir apiUrl en las dependencias
 
   // Eliminar todas las películas
   const handleDeleteMovies = async () => {
