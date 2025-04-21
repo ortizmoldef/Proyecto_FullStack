@@ -27,9 +27,8 @@ const Login = () => {
         },
         {
           headers: {
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true, // IMPORTANTE si tu backend requiere enviar cookies o autenticación cross-domain
         }
       );
   
