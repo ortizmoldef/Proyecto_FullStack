@@ -10,8 +10,6 @@ const moviesRoutes = require('./routes/routesMovie');
 const usersRoutes = require('./routes/routesUser'); 
 const PORT = process.env.PORT || 5000;
 
-console.log("DEBUG >>> MONGO_URI =", process.env.MONGO_URI);
-
 // Middleware con límite de 5MB para JSON y URL encoded
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true, limit: '5mb' }));

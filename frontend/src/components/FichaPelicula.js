@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import '../css/fichaPelicula.scss';
+import api from '../axios'; // Importamos el cliente Axios configurado
 
 const FichaPelicula = () => {
   const { id } = useParams();
@@ -12,7 +12,7 @@ const FichaPelicula = () => {
   useEffect(() => {
     const fetchPelicula = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/obtener_peliculas/${id}`, {
+        const response = await api.get(`http://localhost:5000/api/obtener_peliculas/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
