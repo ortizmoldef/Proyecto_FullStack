@@ -1,11 +1,7 @@
 import axios from 'axios';
 
-const isLocalhost = window.location.hostname === 'localhost';
-
 const api = axios.create({
-  baseURL: isLocalhost
-    ? 'http://localhost:5000/api' // Asegúrate de que la URL sea correcta
-    : 'https://proyectoback-five.vercel.app/api', // URL de producción
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000', // Usa la variable de entorno o localhost por defecto
   headers: {
     'Content-Type': 'application/json',
   },
