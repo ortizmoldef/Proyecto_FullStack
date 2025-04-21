@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import BuscadorPeliculas from './buscadorPeliculas';
 import '../css/peliculas.scss'; // Importa el archivo de estilo SCSS
+import useApiUrl from '../hook/useAPiUrl'; // Asegúrate de importar correctamente el hook
 
 const Peliculas = () => {
   const [movies, setMovies] = useState([]); // Películas originales
@@ -14,12 +15,15 @@ const Peliculas = () => {
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
   const navigate = useNavigate();
+  
+  // Llamar al hook para obtener la API URL (asegurarse de que apiUrl esté definido)
+  const apiUrl = useApiUrl();
 
   // Fetch movies from the API
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/obtener_peliculas', {
+        const response = await axios.get(`${apiUrl}/api/obtener_peliculas`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -43,14 +47,14 @@ const Peliculas = () => {
     } else {
       setError('No hay token de autenticación.');
     }
-  }, [token, navigate]);
+  }, [token, navigate, apiUrl]); // Asegúrate de incluir apiUrl en las dependencias
 
   // Eliminar todas las películas
   const handleDeleteMovies = async () => {
     try {
       await Promise.all(
         filteredMovies.map((movie) =>
-          axios.delete(`http://localhost:5000/api/eliminar_pelicula/${movie._id}`, {
+          axios.delete(`${apiUrl}/api/eliminar_pelicula/${movie._id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -76,7 +80,7 @@ const Peliculas = () => {
   const handleEditMovies = async () => {
     try {
       const updatedMovies = filteredMovies.map((movie) => {
-        return axios.put(`http://localhost:5000/api/modificar_pelicula/${movie._id}`, editData, {
+        return axios.put(`${apiUrl}/api/modificar_pelicula/${movie._id}`, editData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
