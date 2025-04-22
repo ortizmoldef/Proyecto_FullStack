@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';  // Importamos React, useEffect y useState
 import { useParams } from 'react-router-dom';  // Importamos useParams para obtener el ID de la URL
-import '../css/fichaPelicula.scss';  // Importamos el archivo SCSS para los estilos
+import '../styles/fichaPelicula.scss';  // Importamos el archivo SCSS para los estilos
 import api from '../axios';  // Importamos el cliente Axios configurado para hacer peticiones
 
 const FichaPelicula = () => {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from './context/AuthContext';
-import Login from './components/Login';
-import Register from './components/Register';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import Peliculas from './components/peliculas';
 import InsertarPelicula from './components/insertarPelicula';
 import EditarPelicula from './components/EditarPelicula';
@@ -15,6 +15,7 @@ import PrivateRoute from './context/privateRoute'; // Importa PrivateRoute
 function App() {
   return (
     <Router>
+      {/* Context */}
       <AppProvider>
         <div className="App">
             {/* Header */}
@@ -37,6 +38,7 @@ function App() {
               </Route>
             </Routes> 
           </main>
+          {/* Footer */}
           <Footer />
         </div>
       </AppProvider>

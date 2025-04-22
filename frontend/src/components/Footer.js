@@ -1,5 +1,5 @@
 import React from 'react'; // Importamos React para poder crear el componente
-import '../css/footer.scss'; // Importamos el archivo SCSS para los estilos del pie de página
+import '../styles/footer.scss'; // Importamos el archivo SCSS para los estilos del pie de página
 
 const Footer = () => {
   return (

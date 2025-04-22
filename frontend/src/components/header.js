@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'; // Importamos el componente Link para la navegación
 import { FaFilm, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaPlusCircle } from 'react-icons/fa'; // Iconos de react-icons
 import { useAppContext } from '../context/AuthContext';  // Importamos el contexto de autenticación
-import '../css/header.scss'; // Importamos los estilos SCSS para el header
+import '../styles/header.scss'; // Importamos los estilos SCSS para el header
 
 const Header = () => {
   // Accedemos al estado de autenticación y funciones del contexto

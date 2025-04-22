@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');  // Importamos la librería jsonwebtoken
+const logger = require('../utils/logger');  // Importamos el logger de Winston
 
 // Middleware de autenticación JWT
 const authJWT = async (req, res, next) => {
@@ -7,6 +8,7 @@ const authJWT = async (req, res, next) => {
 
   // Si no se proporciona el token, devolvemos un error 401 (No autorizado)
   if (!token) {
+    logger.warn(`Intento de acceso sin token - IP: ${req.ip}, Ruta: ${req.originalUrl}`);
     return res.status(401).json({ mensaje: "No se proporcionó el token" });
   }
 
@@ -20,19 +22,19 @@ const authJWT = async (req, res, next) => {
     // Continuamos con el siguiente middleware o la ruta
     next();
   } catch (err) {
-    console.error('Error al verificar el token:', err);
-
-    // Si el token ha expirado, respondemos con un mensaje de error 401
+    // Registrar intentos fallidos de autenticación con Winston
     if (err.name === 'TokenExpiredError') {
+      logger.warn(`Token expirado - IP: ${req.ip}, Ruta: ${req.originalUrl}`);
       return res.status(401).json({ mensaje: "El token ha expirado. Por favor, inicie sesión nuevamente." });
     }
 
-    // Si el token es inválido o no se puede verificar, respondemos con un mensaje de error 403
     if (err.name === 'JsonWebTokenError') {
+      logger.warn(`Token inválido - IP: ${req.ip}, Ruta: ${req.originalUrl}`);
       return res.status(403).json({ mensaje: "Token inválido. Por favor, inicie sesión nuevamente." });
     }
 
-    // En caso de cualquier otro error durante el proceso, respondemos con un mensaje de error 500 (error interno del servidor)
+    // En caso de cualquier otro error durante el proceso, respondemos con un mensaje de error 500
+    logger.error(`Error al procesar el token - IP: ${req.ip}, Ruta: ${req.originalUrl}, Error: ${err.message}`);
     return res.status(500).json({ mensaje: "Error al procesar el token. Intente de nuevo." });
   }
 };
