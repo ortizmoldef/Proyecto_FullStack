@@ -12,8 +12,13 @@ router.put('/modificar_pelicula/:id', authMiddleware, movieController.updateMovi
 // Eliminar Peliculas
 router.delete('/eliminar_pelicula/:id', authMiddleware, movieController.deleteMovie);
 
+// Obtener Peliculas
 router.get('/obtener_peliculas', authMiddleware, movieController.getAllMovies);
+
+// Obtener Peliculas por ID
 router.get('/obtener_peliculas/:id', authMiddleware, movieController.getMovieById);
+
+// Buscar Peliculas, para el buscador
 router.get('/buscar_peliculas',authMiddleware, movieController.searchMovie);
 
 module.exports = router;

@@ -17,8 +17,11 @@ function App() {
     <Router>
       <AppProvider>
         <div className="App">
+            {/* Header */}
           <Header />
+          {/* Main */}
           <main>
+            {/* Routes */}
             <Routes>
               {/* Rutas públicas */}
               <Route path="/login" element={<Login />} />

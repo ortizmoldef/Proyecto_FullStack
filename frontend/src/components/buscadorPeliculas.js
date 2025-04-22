@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import '../css/buscador.scss';
-
+import api from '../axios'; // Importamos el cliente Axios configurado
 const BuscadorPeliculas = ({ onResultados, onBorrarBusqueda }) => {
   const [query, setQuery] = useState('');
   const [error, setError] = useState('');
@@ -15,7 +14,7 @@ const BuscadorPeliculas = ({ onResultados, onBorrarBusqueda }) => {
     }
 
     try {
-      const response = await axios.get(`http://localhost:5000/api/buscar_peliculas?query=${query}`, {
+      const response = await api.get(`/api/buscar_peliculas?query=${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
