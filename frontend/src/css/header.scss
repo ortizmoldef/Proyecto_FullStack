@@ -70,15 +70,14 @@
     color: white;
   }
   
-  /* Responsive: en pantallas pequeñas, los elementos se apilan */
   @media (max-width: 768px) {
     .nav-list {
-      flex-direction: column;
-      align-items: center;
+      flex-direction: row; /* Mantenemos horizontal */
+      flex-wrap: wrap;     /* Permite que los items bajen si no hay espacio */
+      justify-content: center; /* Centra los items */
     }
   
     .nav-item {
-      margin-bottom: 10px;
+      margin: 5px 10px; /* Menor margen para que entren más fácilmente */
     }
   }
-  
