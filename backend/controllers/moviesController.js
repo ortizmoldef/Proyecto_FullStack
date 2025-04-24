@@ -1,89 +1,125 @@
 const Movie = require("../models/Movie");
 const logger = require('../utils/logger');  // Importamos el logger
+const mongoose = require('mongoose');
 
 // Crear una nueva película
 const createMovie = async (req, res) => {
+    const isProduction = global.IS_PRODUCTION;
+    const session = isProduction ? await mongoose.startSession() : null;
+
     try {
+        if (session) session.startTransaction();
+
         const { title, description, genre, year, poster, rating } = req.body;
 
-        // Verificar que todos los campos obligatorios están presentes
         if (!title || !description || !genre || !year) {
             logger.warn('Faltan campos obligatorios al intentar crear una película');
-            return res.status(400).json({ error: 'Los campos "title", "description", "genre", y "year" son obligatorios' });
+            if (session) await session.abortTransaction();
+            return res.status(400).json({
+                error: 'Los campos "title", "description", "genre", y "year" son obligatorios'
+            });
         }
 
-        // Verificar si la película ya existe en la base de datos
-        const existingMovie = await Movie.findOne({ title: title });
+        const existingMovie = session
+            ? await Movie.findOne({ title }).session(session)
+            : await Movie.findOne({ title });
+
         if (existingMovie) {
-            logger.warn(`La película con el título "${title}" ya existe en la base de datos.`);
-            return res.status(409).json({ message: 'La película ya ha sido creada con este título.' });
+            logger.warn(`La película con el título "${title}" ya existe.`);
+            if (session) await session.abortTransaction();
+            return res.status(409).json({
+                message: 'La película ya ha sido creada con este título.'
+            });
         }
 
-        // Crear nueva película
         const newMovie = new Movie({ title, description, genre, year, poster, rating });
-        await newMovie.save(); // Guardar en la base de datos
 
+        session
+            ? await newMovie.save({ session })
+            : await newMovie.save();
+
+        if (session) await session.commitTransaction();
         logger.info(`Película creada con éxito: ${title}`);
-        // Responder con la película creada
         res.status(201).json(newMovie);
     } catch (error) {
+        if (session) await session.abortTransaction();
         logger.error(`❌ Error al agregar película: ${error.message}`);
         res.status(500).json({ error: 'Error interno del servidor' });
+    } finally {
+        if (session) session.endSession();
     }
 };
 
 // Modificar las Peliculas
 const updateMovie = async (req, res) => {
-    const { id } = req.params;  // Obtener ID de la película desde la URL
+    const isProduction = global.IS_PRODUCTION;
+    const session = isProduction ? await mongoose.startSession() : null;
+    const { id } = req.params;
     const { title, description, genre, year, poster, rating } = req.body;
-
+  
     try {
-        // Validar que los campos obligatorios estén presentes
-        if (!title || !description || !genre || !year) {
-            logger.warn('Faltan campos obligatorios al intentar modificar una película');
-            return res.status(400).json({ error: 'Los campos "title", "description", "genre", y "year" son obligatorios' });
-        }
-
-        // Buscar y actualizar la película por ID
-        const updatedMovie = await Movie.findByIdAndUpdate(id, { title, description, genre, year, poster, rating }, { new: true });
-
-        // Verificar si la película fue encontrada
-        if (!updatedMovie) {
-            logger.warn(`No se encontró la película con ID: ${id}`);
-            return res.status(404).json({ error: 'Película no encontrada' });
-        }
-
-        logger.info(`Película actualizada con éxito: ${title}`);
-        // Responder con la película actualizada
-        res.status(200).json(updatedMovie);
+      if (session) session.startTransaction();
+  
+      if (!title || !description || !genre || !year) {
+        logger.warn('Faltan campos obligatorios al intentar modificar una película');
+        if (session) await session.abortTransaction();
+        return res.status(400).json({
+          error: 'Los campos "title", "description", "genre", y "year" son obligatorios'
+        });
+      }
+  
+      const updatedMovie = session
+        ? await Movie.findByIdAndUpdate(id, { title, description, genre, year, poster, rating }, { new: true, session })
+        : await Movie.findByIdAndUpdate(id, { title, description, genre, year, poster, rating }, { new: true });
+  
+      if (!updatedMovie) {
+        logger.warn(`No se encontró la película con ID: ${id}`);
+        if (session) await session.abortTransaction();
+        return res.status(404).json({ error: 'Película no encontrada' });
+      }
+  
+      if (session) await session.commitTransaction();
+      logger.info(`Película actualizada con éxito: ${title}`);
+      res.status(200).json(updatedMovie);
     } catch (error) {
-        logger.error(`❌ Error al modificar película: ${error.message}`);
-        res.status(500).json({ error: 'Error interno del servidor' });
+      if (session) await session.abortTransaction();
+      logger.error(`❌ Error al modificar película: ${error.message}`);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    } finally {
+      if (session) session.endSession();
     }
-};
+  };
 
 // Eliminar una película
 const deleteMovie = async (req, res) => {
-    const { id } = req.params;  // Obtener el ID desde la URL
-
+    const isProduction = global.IS_PRODUCTION;
+    const session = isProduction ? await mongoose.startSession() : null;
+    const { id } = req.params;
+  
     try {
-        // Intentar eliminar la película por ID
-        const deletedMovie = await Movie.findByIdAndDelete(id);
-
-        // Si no se encuentra la película, responder con un error
-        if (!deletedMovie) {
-            logger.warn(`No se encontró la película con ID: ${id} para eliminarla`);
-            return res.status(404).json({ error: 'Película no encontrada' });
-        }
-
-        logger.info(`Película eliminada con éxito: ${deletedMovie.title}`);
-        // Responder con la película eliminada
-        res.status(200).json({ message: 'Película eliminada con éxito', deletedMovie });
+      if (session) session.startTransaction();
+  
+      const deletedMovie = session
+        ? await Movie.findByIdAndDelete(id).session(session)
+        : await Movie.findByIdAndDelete(id);
+  
+      if (!deletedMovie) {
+        logger.warn(`No se encontró la película con ID: ${id} para eliminarla`);
+        if (session) await session.abortTransaction();
+        return res.status(404).json({ error: 'Película no encontrada' });
+      }
+  
+      if (session) await session.commitTransaction();
+      logger.info(`Película eliminada con éxito: ${deletedMovie.title}`);
+      res.status(200).json({ message: 'Película eliminada con éxito', deletedMovie });
     } catch (error) {
-        logger.error(`❌ Error al eliminar película: ${error.message}`);
-        res.status(500).json({ error: 'Error interno del servidor' });
+      if (session) await session.abortTransaction();
+      logger.error(`❌ Error al eliminar película: ${error.message}`);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    } finally {
+      if (session) session.endSession();
     }
-};
+  };
 
 // Obtener todas las películas
 const getAllMovies = async (req, res) => {
