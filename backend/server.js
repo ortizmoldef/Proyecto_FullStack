@@ -25,6 +25,10 @@ const allowedOrigins = [
   'http://localhost:3000'
 ];
 
+// ⬇️ Aquí defines si estás en producción
+global.IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
+
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
