@@ -134,8 +134,11 @@ dist
 .env.test.local
 .env.production.local
 .env.local
-backend/.env
-frontend/ .env
+# Para que no suba los archivos .env de las carpetas
+/backend/.env.development
+/backend/.env.production
+/frontend/.env.development
+/frontend/.env.production
 # yarn v2
 .yarn/cache
 .yarn/unplugged
