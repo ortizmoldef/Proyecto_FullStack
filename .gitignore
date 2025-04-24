@@ -134,7 +134,8 @@ dist
 .env.test.local
 .env.production.local
 .env.local
-
+backend/.env
+frontend/ .env
 # yarn v2
 .yarn/cache
 .yarn/unplugged
