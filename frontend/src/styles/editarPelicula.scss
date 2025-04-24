@@ -1,88 +1,88 @@
 .editar-pelicula-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background-color: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 600px; /* Establece un ancho máximo de 600px para que no se estire demasiado en pantallas grandes */
+  margin: 2rem auto; /* Centra el contenedor con un margen superior e inferior de 2rem */
+  padding: 2rem; /* Añade un relleno interno de 2rem alrededor del contenedor */
+  background-color: #ffffff; /* Color de fondo blanco */
+  border-radius: 12px; /* Bordes redondeados de 12px para un diseño suave */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Sombra ligera para darle profundidad al contenedor */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Establece la tipografía de la interfaz */
 
   h2 {
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
-    color: #333;
-    text-align: center;
+    margin-bottom: 1.5rem; /* Espacio debajo del título */
+    font-size: 1.8rem; /* Tamaño de fuente grande para el título */
+    color: #333; /* Color oscuro para el título */
+    text-align: center; /* Centra el título horizontalmente */
   }
 
   label {
-    display: block;
-    margin-bottom: 1.2rem;
-    font-weight: 600;
-    color: #444;
+    display: block; /* Hace que las etiquetas se comporten como bloques */
+    margin-bottom: 1.2rem; /* Añade espacio debajo de las etiquetas */
+    font-weight: 600; /* Hace las etiquetas un poco más gruesas */
+    color: #444; /* Color de texto ligeramente más claro que el título */
 
     input,
     textarea {
-      width: 100%;
-      padding: 0.6rem;
-      margin-top: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: border-color 0.3s;
+      width: 100%; /* Hace que los campos de entrada y textarea ocupen el 100% del ancho disponible */
+      padding: 0.6rem; /* Relleno interno de los campos */
+      margin-top: 0.5rem; /* Espacio encima de los campos */
+      border: 1px solid #ccc; /* Borde gris claro */
+      border-radius: 8px; /* Bordes redondeados en los campos */
+      font-size: 1rem; /* Tamaño de fuente estándar */
+      transition: border-color 0.3s; /* Transición suave para cambiar el color del borde al hacer focus */
 
       &:focus {
-        outline: none;
-        border-color: #0077ff;
+        outline: none; /* Elimina el contorno del campo cuando está enfocado */
+        border-color: #0077ff; /* Cambia el color del borde a azul cuando el campo está enfocado */
       }
     }
 
     textarea {
-      resize: vertical;
-      min-height: 100px;
+      resize: vertical; /* Permite cambiar el tamaño del textarea solo verticalmente */
+      min-height: 100px; /* Establece una altura mínima para el textarea */
     }
   }
 
   .message.error {
-    background-color: #ffe0e0;
-    color: #c0392b;
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    text-align: center;
-    border: 1px solid #e0b4b4;
+    background-color: #ffe0e0; /* Fondo rojo claro para los mensajes de error */
+    color: #c0392b; /* Color de texto rojo oscuro para el mensaje */
+    padding: 1rem; /* Añade espacio interno alrededor del mensaje */
+    border-radius: 8px; /* Bordes redondeados para el mensaje */
+    margin-bottom: 1rem; /* Espacio debajo del mensaje */
+    text-align: center; /* Centra el texto del mensaje */
+    border: 1px solid #e0b4b4; /* Borde rojo claro alrededor del mensaje */
   }
 
   button {
-    display: block;
-    width: 100%;
-    padding: 0.8rem;
-    margin-top: 1rem;
-    background-color: #0077ff;
-    color: white;
-    font-size: 1rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    display: block; /* Hace que el botón ocupe todo el ancho disponible */
+    width: 100%; /* El botón se extiende a lo largo del contenedor */
+    padding: 0.8rem; /* Espaciado interno del botón */
+    margin-top: 1rem; /* Espacio arriba del botón */
+    background-color: #0077ff; /* Fondo azul para el botón */
+    color: white; /* Color de texto blanco */
+    font-size: 1rem; /* Tamaño estándar para la fuente del botón */
+    font-weight: 600; /* Peso de la fuente del botón, más gruesa */
+    border: none; /* Elimina el borde del botón */
+    border-radius: 8px; /* Bordes redondeados en el botón */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+    transition: background-color 0.3s; /* Transición suave para cambiar el color del fondo al pasar el cursor */
 
     &:hover {
-      background-color: #005fcc;
+      background-color: #005fcc; /* Cambia el color del fondo a un azul más oscuro al hacer hover */
     }
   }
 
   .poster-preview {
-    text-align: center;
-    margin-top: 1rem;
+    text-align: center; /* Centra el contenido dentro de la vista previa de la imagen */
+    margin-top: 1rem; /* Espacio arriba de la vista previa del póster */
 
     img {
-      width: 200px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s;
-
+      width: 200px; /* Establece un tamaño fijo para la imagen */
+      border-radius: 8px; /* Bordes redondeados en la imagen */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Añade una sombra ligera a la imagen para darle profundidad */
+      transition: transform 0.3s; /* Transición suave para el efecto de escalado de la imagen */
+      
       &:hover {
-        transform: scale(1.03);
+        transform: scale(1.03); /* Escala la imagen ligeramente cuando el cursor pasa sobre ella */
       }
     }
   }

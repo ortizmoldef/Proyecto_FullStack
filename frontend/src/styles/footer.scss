@@ -1,35 +1,34 @@
 .footer {
-    background-color: #1f1f1f;
-    color: #f1f1f1;
-    padding: 1.5rem 2rem;
-    margin-top: auto; // Este funciona si el contenedor padre usa flex y el contenido principal puede crecer
-  
-    .footer__content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-  
-      p {
-        margin: 0;
-        font-size: 0.9rem;
-      }
-  
-      .footer__links {
-        margin-top: 0.5rem;
-        display: flex;
-        gap: 1rem;
-  
-        a {
-          color: #f1f1f1;
-          text-decoration: none;
-          font-size: 0.9rem;
-  
-          &:hover {
-            color: #00bcd4;
-          }
+  background-color: #1f1f1f; /* Color de fondo oscuro para el pie de página */
+  color: #f1f1f1; /* Color de texto blanco para el pie de página */
+  padding: 1.5rem 2rem; /* Relleno interno en la parte superior e inferior de 1.5rem y a los lados de 2rem */
+  margin-top: auto; /* Asegura que el pie de página se ubique al final del contenedor si se usa flex en el contenedor padre */
+
+  .footer__content {
+    display: flex; /* Establece un contenedor flex para los elementos internos */
+    flex-direction: column; /* Los elementos dentro de este contenedor se alinean en una columna */
+    align-items: center; /* Centra los elementos de la columna horizontalmente */
+    text-align: center; /* Centra el texto dentro del contenedor */
+
+    p {
+      margin: 0; /* Elimina el margen por defecto de los párrafos */
+      font-size: 0.9rem; /* Tamaño de fuente pequeño para el párrafo */
+    }
+
+    .footer__links {
+      margin-top: 0.5rem; /* Añade un margen superior para separar los enlaces del texto */
+      display: flex; /* Establece que los enlaces se dispongan en una fila */
+      gap: 1rem; /* Añade espacio entre cada enlace */
+
+      a {
+        color: #f1f1f1; /* Color blanco para los enlaces */
+        text-decoration: none; /* Elimina el subrayado de los enlaces */
+        font-size: 0.9rem; /* Tamaño de fuente pequeño para los enlaces */
+
+        &:hover {
+          color: #00bcd4; /* Cambia el color del enlace a un tono azul claro al pasar el cursor */
         }
       }
     }
   }
-  
+}

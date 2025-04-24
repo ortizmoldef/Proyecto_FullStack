@@ -1,110 +1,112 @@
 /* Asegura que el contenedor principal ocupe toda la pantalla */
 .page-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: flex; /* Utiliza flexbox para organizar el contenido */
+  justify-content: center; /* Centra el contenido horizontalmente */
+  align-items: center; /* Centra el contenido verticalmente */
   height: 100vh; /* Asegura que ocupe toda la altura de la pantalla */
   margin: 0; /* Elimina márgenes predeterminados */
 }
 
 .register-container {
-  max-width: 500px;
+  max-width: 500px; /* Máximo ancho del contenedor */
   width: 100%; /* Asegura que el contenedor no sobrepase el 100% del ancho */
-  padding: 2rem;
-  background-color: #fdfdfd;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding: 2rem; /* Espaciado interno */
+  background-color: #fdfdfd; /* Fondo blanco */
+  border-radius: 15px; /* Esquinas redondeadas */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  display: flex; /* Utiliza flexbox */
+  flex-direction: column; /* Organiza los elementos en una columna */
+  justify-content: center; /* Centra el contenido verticalmente */
+  align-items: center; /* Centra el contenido horizontalmente */
   
   .register-form {
-    max-width: 400px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+    max-width: 400px; /* Máximo ancho del formulario */
+    width: 100%; /* Asegura que el formulario ocupe el 100% del ancho disponible */
+    display: flex; /* Utiliza flexbox dentro del formulario */
+    flex-direction: column; /* Organiza los elementos del formulario en una columna */
     align-items: center; /* Centra el formulario dentro de su contenedor */
 
     h2 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 1.5rem;
-      color: #333;
+      text-align: center; /* Centra el título */
+      font-size: 2rem; /* Tamaño de fuente del título */
+      margin-bottom: 1.5rem; /* Espacio debajo del título */
+      color: #333; /* Color del título */
     }
 
     .input-group {
-      margin-bottom: 1.5rem;
-      width: 100%;
+      margin-bottom: 1.5rem; /* Espacio debajo de cada grupo de input */
+      width: 100%; /* Asegura que el grupo de inputs ocupe todo el ancho disponible */
       
       input {
-        padding: 0.6rem;
-        font-size: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        outline: none;
-        width: 100%; /* Asegura que los inputs ocupen todo el ancho disponible */
+        padding: 0.6rem; /* Espaciado interno de los inputs */
+        font-size: 1rem; /* Tamaño de fuente del input */
+        border: 1px solid #ccc; /* Borde gris claro */
+        border-radius: 8px; /* Esquinas redondeadas */
+        outline: none; /* Elimina el contorno predeterminado */
+        width: 100%; /* Asegura que el input ocupe todo el ancho disponible */
 
         &:focus {
-          border-color: #007bff;
+          border-color: #007bff; /* Color de borde al hacer foco en el input */
         }
 
         &::placeholder {
-          color: #888;
+          color: #888; /* Color del texto de los placeholders */
         }
       }
     }
 
+    /* Mensajes de error y éxito */
     .error-message,
     .success-message {
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 1rem;
+      text-align: center; /* Centra el mensaje */
+      font-weight: bold; /* Texto en negrita */
+      margin-bottom: 1rem; /* Espacio debajo del mensaje */
     }
 
     .error-message {
-      color: #d9534f;
+      color: #d9534f; /* Color rojo para mensajes de error */
     }
 
     .success-message {
-      color: #5cb85c;
+      color: #5cb85c; /* Color verde para mensajes de éxito */
     }
 
     form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      width: 100%;
+      display: flex; /* Utiliza flexbox dentro del formulario */
+      flex-direction: column; /* Organiza los inputs y botones en una columna */
+      gap: 1rem; /* Espacio entre los elementos */
+      width: 100%; /* Asegura que el formulario ocupe todo el ancho disponible */
     }
 
     .register-button {
-      padding: 0.75rem;
-      background-color: #000;
-      color: white;
-      font-weight: bold;
-      font-size: 1rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s;
+      padding: 0.75rem; /* Espaciado interno del botón */
+      background-color: #000; /* Fondo negro */
+      color: white; /* Texto blanco */
+      font-weight: bold; /* Texto en negrita */
+      font-size: 1rem; /* Tamaño de fuente */
+      border: none; /* Elimina el borde predeterminado */
+      border-radius: 8px; /* Esquinas redondeadas */
+      cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+      transition: background-color 0.3s; /* Transición suave del color de fondo */
       width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
 
       &:hover {
-        background-color: #ff6f61;
+        background-color: #ff6f61; /* Cambio de color al pasar el cursor sobre el botón */
       }
     }
   
+    /* Estilo para el enlace de inicio de sesión */
     p {
-      text-align: center;
-      margin-top: 1rem;
+      text-align: center; /* Centra el párrafo */
+      margin-top: 1rem; /* Espacio arriba del párrafo */
   
       a {
-        color: #ff6f61;
-        text-decoration: none;
-        font-weight: bold;
+        color: #ff6f61; /* Color del enlace */
+        text-decoration: none; /* Elimina el subrayado */
+        font-weight: bold; /* Texto en negrita */
   
         &:hover {
-          text-decoration: underline;
+          text-decoration: underline; /* Subraya el enlace al pasar el cursor */
         }
       }
     }

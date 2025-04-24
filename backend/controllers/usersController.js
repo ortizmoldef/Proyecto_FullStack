@@ -1,84 +1,105 @@
+// Importamos bcryptjs para cifrar y comparar contraseñas
 const bcrypt = require('bcryptjs');
-const User = require("../models/User");
-const jwt = require('jsonwebtoken');
-const logger = require('../utils/logger');  // Importamos el logger
 
-// Crear Usuario en el registro
+// Importamos el modelo de usuario
+const User = require("../models/User");
+
+// Importamos jsonwebtoken para generar y verificar JWT
+const jwt = require('jsonwebtoken');
+
+// Importamos el sistema de logging personalizado
+const logger = require('../utils/logger');
+
+// ==============================================
+// Registrar un nuevo usuario
+// ==============================================
 const createUser = async (req, res) => {
     try {
+        // Extraemos los campos del cuerpo de la petición
         const { name, email, password, role } = req.body;
 
+        // Validamos que todos los campos obligatorios estén presentes
         if (!name || !email || !password) {
             logger.warn('Faltan campos obligatorios en la solicitud de registro');
             return res.status(400).json({ message: 'Todos los campos son obligatorios' });
         }
 
-        // Verificar si el correo ya está registrado
+        // Verificamos si ya existe un usuario con ese correo
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             logger.warn(`El correo electrónico ${email} ya está registrado`);
             return res.status(400).json({ message: "El correo electrónico ya está registrado." });
         }
 
-        // Encriptar la contraseña
+        // Encriptamos la contraseña con un salt generado
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Crear el nuevo usuario
+        // Creamos el nuevo usuario con la contraseña cifrada
         const newUser = new User({
             name,
             email,
             password: hashedPassword,
-            role: role || 'user' // Si no se proporciona un role, se asigna 'user' por defecto
+            role: role || 'user' // Si no se especifica rol, se asigna 'user' por defecto
         });
 
-        // Guardar el usuario en la base de datos
+        // Guardamos el usuario en la base de datos
         await newUser.save();
 
+        // Registramos el evento en el logger
         logger.info(`Usuario registrado con éxito: ${name} (${email})`);
 
+        // Respondemos con éxito y devolvemos el usuario
         res.status(201).json({ message: "Usuario registrado con éxito.", user: newUser });
     } catch (error) {
+        // Si ocurre un error, lo registramos y respondemos con error 500
         logger.error(`Error al registrar el usuario: ${error.message}`);
         res.status(500).json({ message: "Error al registrar el usuario." });
     }
 };
 
-// Logear el usuario una vez que esta creado.
+// ==============================================
+// Iniciar sesión de usuario
+// ==============================================
 const loginUser = async (req, res) => {
+    // Extraemos email y contraseña del body
     const { email, password } = req.body;
 
     try {
-        // Buscar al usuario por email
+        // Buscamos el usuario por email
         const user = await User.findOne({ email });
 
+        // Si no existe, devolvemos error
         if (!user) {
             logger.warn(`Usuario no encontrado: ${email}`);
             return res.status(400).json({ mensaje: 'Usuario no encontrado' });
         }
 
-        // Verificar la contraseña
+        // Comparamos la contraseña ingresada con la almacenada
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
             logger.warn(`Contraseña incorrecta para el usuario: ${email}`);
             return res.status(400).json({ mensaje: 'Contraseña incorrecta' });
         }
 
-        // Generar el token
+        // Generamos un token JWT con el ID del usuario y su rol
         const token = jwt.sign(
-            { userId: user._id, role: user.role },  // Carga los datos del usuario en el token
-            process.env.JWT_SECRET,  // La clave secreta que usas en el backend
-            { expiresIn: '1h' }  // El token expira en 1 hora
+            { userId: user._id, role: user.role },
+            process.env.JWT_SECRET, // Clave secreta desde las variables de entorno
+            { expiresIn: '1h' } // El token expira en una hora
         );
 
         logger.info(`Usuario logueado con éxito: ${email}`);
 
-        // Enviar el token como respuesta
-        res.json({ token, user });  // Enviar el token y los datos del usuario
+        // Enviamos el token y los datos del usuario como respuesta
+        res.json({ token, user });
     } catch (err) {
         logger.error(`Error en el inicio de sesión del usuario: ${err.message}`);
         res.status(500).json({ mensaje: 'Error en el servidor' });
     }
 };
 
+// ==============================================
+// Exportamos las funciones para usarlas en rutas
+// ==============================================
 module.exports = { createUser, loginUser };

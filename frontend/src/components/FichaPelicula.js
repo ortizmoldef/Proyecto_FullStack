@@ -40,6 +40,7 @@ const FichaPelicula = () => {
       <p><strong>Descripción:</strong> {pelicula.description}</p>  {/* Descripción de la película */}
       <p><strong>Género:</strong> {pelicula.genre.join(', ')}</p>  {/* Género(s) de la película */}
       <p><strong>Año:</strong> {pelicula.year}</p>  {/* Año de estreno de la película */}
+      <p><strong>Valoración:</strong> {pelicula.rating}</p>  {/* Valoración de la película */}
     </div>
   );
 };

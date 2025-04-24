@@ -1,83 +1,175 @@
-
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
 /* Estilos generales para la barra de navegación */
 .navbar {
-    width: 100%;  /* Ocupa todo el ancho */
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 15px 30px;
-    background-color: #333; /* Fondo oscuro */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+  width: 100%;  /* Ocupa todo el ancho */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #333; /* Fondo oscuro */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+/* Estilo para los elementos de la lista */
+.nav-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilo de los elementos de navegación */
+.nav-item {
+  margin-right: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Estilo para los enlaces */
+.nav-link {
+  color: #fff;
+  font-size: 16px;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin-right: 8px; /* Espacio entre el icono y el texto */
   }
-  
-  /* Estilo para los elementos de la lista */
+}
+
+/* Hover para los enlaces */
+.nav-link:hover {
+  background-color: #ff6f61; /* Un color vibrante */
+  color: #fff;
+}
+
+/* Estilo para el botón de logout */
+button.nav-link {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover para el botón de logout */
+button.nav-link:hover {
+  background-color: #ff6f61;
+  color: white;
+}
+
+/* Estilos generales para el contenedor de la página */
+.editar-pelicula-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.editar-pelicula-container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #333;
+  text-align: center;
+}
+
+.editar-pelicula-container label {
+  display: block;
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.editar-pelicula-container label input,
+.editar-pelicula-container label textarea {
+  width: 100%;
+  padding: 0.6rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.editar-pelicula-container label input:focus,
+.editar-pelicula-container label textarea:focus {
+  outline: none;
+  border-color: #0077ff;
+}
+
+.editar-pelicula-container label textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.editar-pelicula-container .message.error {
+  background-color: #ffe0e0;
+  color: #c0392b;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+  border: 1px solid #e0b4b4;
+}
+
+.editar-pelicula-container button {
+  display: block;
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 1rem;
+  background-color: #0077ff;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.editar-pelicula-container button:hover {
+  background-color: #005fcc;
+}
+
+.editar-pelicula-container .poster-preview {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.editar-pelicula-container .poster-preview img {
+  width: 200px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.editar-pelicula-container .poster-preview img:hover {
+  transform: scale(1.03);
+}
+
+/* Media Query para pantallas pequeñas */
+@media (max-width: 768px) {
   .nav-list {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  
-  /* Estilo de los elementos de navegación */
+
   .nav-item {
-    margin-right: 20px;
-    font-family: 'Roboto', sans-serif;
+    margin: 5px 10px;
   }
-  
-  /* Estilo para los enlaces */
-  .nav-link {
-    color: #fff;
-    font-size: 16px;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-    display: flex;
-    align-items: center;
-  
-    svg {
-      margin-right: 8px; /* Espacio entre el icono y el texto */
-    }
-  }
-  
-  /* Hover para los enlaces */
-  .nav-link:hover {
-    background-color: #ff6f61; /* Un color vibrante */
-    color: #fff;
-  }
-  
-  /* Estilo para el botón de logout */
-  button.nav-link {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-  }
-  
-  /* Hover para el botón de logout */
-  button.nav-link:hover {
-    background-color: #ff6f61;
-    color: white;
-  }
-  
-  @media (max-width: 768px) {
-    .nav-list {
-      flex-direction: row; /* Mantenemos horizontal */
-      flex-wrap: wrap;     /* Permite que los items bajen si no hay espacio */
-      justify-content: center; /* Centra los items */
-    }
-  
-    .nav-item {
-      margin: 5px 10px; /* Menor margen para que entren más fácilmente */
-    }
-  }
+}

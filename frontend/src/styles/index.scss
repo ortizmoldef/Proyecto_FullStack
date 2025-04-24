@@ -1,15 +1,17 @@
+/* Asegura que html, body y el contenedor principal (#root) ocupen toda la altura de la ventana */
 html, body, #root {
-    height: 100%;
-    margin: 0;
-  }
-  
-  .App {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-  
-  main {
-    flex: 1;
-  }
-  
+  height: 100%;
+  margin: 0;
+}
+
+/* Configura el contenedor principal (.App) para que use una estructura flexible y ocupe todo el alto disponible */
+.App {
+  display: flex;
+  flex-direction: column; /* Organiza los elementos de la aplicación en una columna */
+  min-height: 100vh; /* Asegura que ocupe al menos el 100% de la altura de la ventana */
+}
+
+/* El main tiene una flexibilidad para crecer y ocupar el espacio disponible */
+main {
+  flex: 1; /* Permite que el main ocupe todo el espacio disponible restante */
+}
