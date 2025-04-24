@@ -15,7 +15,8 @@ Pagina de Insertar Peliculas:
 
 Pagina de Modificar Pelicula:
 
-![image](https://github.com/user-attachments/assets/15f742ab-6e8a-402e-9c59-238b2e125a53)
+![image](https://github.com/user-attachments/assets/d2df02d4-4a6b-43f5-978f-6c615aba11ef)
+
 
 Pagina de Login:
 
