@@ -39,4 +39,4 @@ const authJWT = async (req, res, next) => {
   }
 };
 
-module.exports = authJWT;  // Exportamos el middleware para usarlo en otras partes de la aplicación
+module.exports = authJWT;  // Exportamos el middleware para usarlo en otras partes de la aplicación 
