@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="footer"> {/* Elemento <footer> para definir la sección del pie de página */}
       <div className="footer__content"> {/* Contenedor principal para los contenidos del pie de página */}
-        <p>&copy; {new Date().getFullYear()} TuAppPeliculas. Todos los derechos reservados.</p> 
+        <p>&copy; {new Date().getFullYear()} BiblioPelis. Todos los derechos reservados.</p> 
         {/* Muestra el copyright dinámico con el año actual utilizando JavaScript */}
         
         <div className="footer__links"> {/* Contenedor para los enlaces del pie de página */}
